@@ -2,7 +2,10 @@ import { db } from './db'
 import { PrismaAdapter } from '@next-auth/prisma-adapter'
 import { nanoid } from 'nanoid'
 import { NextAuthOptions, getServerSession } from 'next-auth'
+import bcrypt from "bcrypt";
+import CredentialsProvider from 'next-auth/providers/credentials'
 import GoogleProvider from 'next-auth/providers/google'
+import { UserCredentials } from './validators';
 
 export const authOptions: NextAuthOptions = {
     adapter: PrismaAdapter(db),
@@ -17,7 +20,29 @@ export const authOptions: NextAuthOptions = {
             clientId: process.env.GOOGLE_CLIENT_ID!,
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
-        /* add credentials provider and check below opts */
+        CredentialsProvider({
+            name: "Credentials",
+            credentials: {
+                email: {},
+                password: {},
+            },
+            async authorize(credentials) {
+                const { email, password } = UserCredentials.parse(credentials);
+                //  Retrieve credentials from db
+                const userExists = await db.user.findFirst({
+                    where: {
+                        email,
+                    }
+                });
+                if (!userExists) return null;
+                const samePass = await bcrypt.compare(password, userExists.password!);
+                if (samePass) {
+                    return userExists;
+                } else {
+                    return null;
+                }
+            }
+        })
     ],
     callbacks: {
         async session({ token, session }) {

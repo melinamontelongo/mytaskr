@@ -7,8 +7,8 @@ module.exports = {
   ],
   darkMode: ['class'],
   daisyui: {
-    themes: ["autumn", "coffee"],
-    darkTheme: "coffee",
+    themes: ["corporate", "business"],
+    darkTheme: "business",
   },
   plugins: [require("daisyui")],
 }
