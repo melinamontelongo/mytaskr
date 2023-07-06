@@ -1,4 +1,4 @@
-import SignUp from "@/components/SignUp";
+import SignUp from "@/components/auth/SignUp";
 import Link from "next/link";
 import { FiChevronLeft } from "react-icons/fi";
 
