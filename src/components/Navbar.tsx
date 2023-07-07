@@ -1,10 +1,10 @@
 import Link from "next/link";
 import ThemeToggler from "./ThemeToggler";
 import { getAuthSession } from "@/lib/auth";
+import UserDropdown from "./UserDropdown";
 
 const Navbar = async() => {
     const session = await getAuthSession();
-    console.log(session)
     return (
         <div className="navbar bg-base-100 shadow-lg h-15 fixed top-0 left-0 right-0">
             <div className="flex-1">
@@ -12,7 +12,7 @@ const Navbar = async() => {
             </div>
             <div className="flex-none gap-2">
                 <ThemeToggler />
-                {session?.user ? "Welcome!" : 
+                {session ? <UserDropdown user={session.user}/> : 
                 
                 <Link href="/sign-in" className="btn btn-primary">Sign in</Link>
                 }
