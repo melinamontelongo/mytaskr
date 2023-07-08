@@ -43,12 +43,68 @@ model User {
 
   username String? @unique
   password String?
-  
-  accounts      Account[]
-  sessions      Session[]
+
+  accounts     Account[]
+  sessions     Session[]
+  //  Workspaces the user has created or joined
+  workspaces   Workspace[] @relation(fields: [workspaceIDs], references: [id])
+  workspaceIDs String[]    @db.ObjectId
+  //  Boards the user has created or joined
+  boards       Board[]     @relation(fields: [boardsIDs], references: [id])
+  boardsIDs    String[]    @db.ObjectId
+  //  Tasks the user was assigned to
+  Task         Task[]
 }
 
-// TO DO
+model Workspace {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  //  Privacy status
+  isPublic    Boolean
+  //  Workspace members
+  users       User[]   @relation(fields: [usersIDs], references: [id])
+  usersIDs    String[] @db.ObjectId
+  //  Boards it contains
+  boards      Board[]
+}
 
-// DONE ?
+model Board {
+  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  createdAt   DateTime  @default(now())
+  //  Workspace it belongs to
+  workspace   Workspace @relation(fields: [workspaceID], references: [id])
+  workspaceID String    @db.ObjectId
+  //  Board members
+  users       User[]    @relation(fields: [usersIDs], references: [id])
+  usersIDs    String[]  @db.ObjectId
+  //  Lists it contains
+  lists       List[]
+}
 
+model List {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  //  Board it belongs to
+  board       Board   @relation(fields: [boardID], references: [id])
+  boardID     String  @db.ObjectId
+  //  Tasks it contains
+  tasks       Task[]
+}
+
+model Task {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  //  List it belongs to
+  list        List     @relation(fields: [listId], references: [id])
+  listId      String   @db.ObjectId
+  //  User who is asigned to
+  user        User?    @relation(fields: [userID], references: [id])
+  userID      String   @db.ObjectId
+}
