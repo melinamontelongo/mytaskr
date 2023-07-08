@@ -18,7 +18,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" data-theme="coffee">
-      <body className={`${inter.className}`}>
+      <body className={`${inter.className} bg-base-200`}>
         <Providers>
           <Navbar />
           <div className="">
