@@ -1,14 +1,18 @@
 import Link from "next/link";
 import SignUpForm from "./SignUpForm";
+import { redirect } from "next/navigation";
+import { getAuthSession } from "@/lib/auth";
 
-const SignUp = () => {
+const SignUp = async() => {
+    const session = await getAuthSession();
+        //  Logged in users cannot access sign up page
+    if (session) return redirect("/");
     return (
-        <div className="space-y-5">
+        <div className="space-y-5 flex flex-col justify-items-center">
             <div>
-             {/*    <h2 className="font-extrabold text-2xl text-center">mytaskr</h2> */}
                 <h1 className="font-extrabold text-4xl text-center">Sign up</h1>
             </div>
-            <div>
+            <div className="flex flex-col justify-items-center">
                 <SignUpForm />
             </div>
             <div>
