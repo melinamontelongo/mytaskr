@@ -1,5 +1,6 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
+import { Toaster } from "react-hot-toast";
 import Providers from './providers'
 import Navbar from '@/components/Navbar'
 
@@ -20,9 +21,13 @@ export default function RootLayout({
       <body className={`${inter.className}`}>
         <Providers>
           <Navbar />
-          <div className="container">
-          {children}
+          <div className="">
+            {children}
           </div>
+          <Toaster toastOptions={{
+            className: 'notification',
+            position: "bottom-right",
+          }} />
         </Providers>
       </body>
     </html>

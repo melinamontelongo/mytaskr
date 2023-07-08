@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { UserCredentials } from "@/lib/validators";
+import { nanoid } from 'nanoid'
 import bcrypt from "bcrypt";
 
 export async function POST(req:Request){
@@ -12,22 +13,21 @@ export async function POST(req:Request){
             }
         });
         
-        if(userExists) return new Response("A user with that email address already exists", {status: 409});
+        if(userExists) return new Response("That email address has already been registered.", {status: 409});
 
         bcrypt.hash(password, 10, async(err, hash) => {
             if(err) {
-                console.log("err from hash", err)
                 return new Response("There was an error registering the user.", {status: 500})};
             await db.user.create({
                 data: {
                     email,
                     password: hash,
+                    username: nanoid(10),
                 }
             })
         })
         return new Response("OK");
     } catch (e) {
-        console.log("err from catch", e)
         return new Response("There was an error registering the user.", {status: 500});
     }
     

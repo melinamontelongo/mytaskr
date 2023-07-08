@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.notification{
+background: hsl(var(--b2))!important;
+color: hsl(var(--bc))!important;
+}
