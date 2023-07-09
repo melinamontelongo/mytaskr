@@ -51,22 +51,22 @@ const AuthForm = () => {
             <form onSubmit={handleSubmit(signUpWithCredentials)}>
                 <div className="form-control mb-2">
                     <label className="label">Email</label>
-                    <input type="text" className="input input-bordered" {...register("email")} />
-                    {errors.email && <p className="text-error">Invalid email address</p>}
+                    <input type="text" className={`input input-bordered ${errors.email ? "border-error" : "border-base-300"}`} {...register("email")} />
+                    {errors.email && <p className="text-error text-xs">A valid email address is required.</p>}
                 </div>
                 <div className="form-control mb-2">
                     <label className="label">Password</label>
-                    <input type="password" className="input input-bordered" {...register("password")} />
-                    {errors.password && <p className="text-error">Invalid password</p>}
+                    <input type="password" className={`input input-bordered ${errors.password ? "border-error" : "border-base-300"}`} {...register("password")} />
+                    {errors.password && <p className="text-error text-xs">Password must contain between 6 and 18 characters.</p>}
                 </div>
-                <button className="btn normal-case w-full flex mx-auto justify-center items-center gap-4 mb-2">
+                <button className="btn btn-primary normal-case w-full flex mx-auto justify-center items-center gap-4 my-5">
                     {isCLoading ? <span className="loading loading-spinner"></span> : "Sign up"}
                 </button>
             </form>
 
-            <div className="divider">Or continue with</div>
+            <div className="divider mt-1">Or continue with</div>
 
-            <button onClick={SignUpWithGoogle} className="btn normal-case w-full flex mx-auto justify-center items-center gap-4 mb-2">
+            <button onClick={SignUpWithGoogle} className="btn bg-base-300 normal-case w-full flex mx-auto justify-center items-center gap-4 mb-2">
                 {isGLoading ? <span className="loading loading-spinner"></span> : <><FcGoogle /> Google</>}
             </button>
         </div>

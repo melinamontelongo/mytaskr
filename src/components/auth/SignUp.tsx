@@ -12,7 +12,7 @@ const SignUp = async() => {
             </div>
             <div>
                 <p className="text-center">
-                    Already have a mytaskr account? <Link className="underline" href="/sign-in">Sign in</Link>
+                    Already have a mytaskr account? <Link className="underline text-primary" href="/sign-in">Sign in</Link>
                 </p>
             </div>
         </div>

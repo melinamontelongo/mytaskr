@@ -21,6 +21,7 @@ export const authOptions: NextAuthOptions = {
             clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
         }),
         CredentialsProvider({
+            id: 'credentials',
             name: "Credentials",
             credentials: {
                 email: {},
@@ -34,12 +35,12 @@ export const authOptions: NextAuthOptions = {
                         email,
                     }
                 });
-                if (!userExists) return null;
+                if (!userExists) throw new Error("That email address is not registered.");
                 const samePass = await bcrypt.compare(password, userExists.password!);
                 if (samePass) {
                     return userExists;
                 } else {
-                    return null;
+                    throw new Error("Wrong password.");
                 }
             }
         })
@@ -88,9 +89,13 @@ export const authOptions: NextAuthOptions = {
                 username: dbUser.username,
             }
         },
-        redirect() {
-            return '/'
-        },
+        async redirect({ url, baseUrl }) {
+            // Allows relative callback URLs
+            if (url.startsWith("/")) return `${baseUrl}${url}`
+            // Allows callback URLs on the same origin
+            else if (new URL(url).origin === baseUrl) return url
+            return baseUrl
+        }
     },
 }
 
