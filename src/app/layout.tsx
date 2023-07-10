@@ -17,11 +17,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" data-theme="coffee">
+    <html lang="en">
       <body className={`${inter.className} bg-base-200`}>
         <Providers>
           <Navbar />
-          <div className="">
+          <div className="md:pt-4 pt-20">
             {children}
           </div>
           <Toaster toastOptions={{

@@ -8,12 +8,22 @@ export const UserCredentials = z.object({
 
 export type UserCredentialsType = z.infer<typeof UserCredentials>
 
-//  Workspace
+//  Workspace creation request
 export const WorkspaceCreation = z.object({
     name: z.string().min(3).max(32),
     description: z.string().max(150),
-    isPublic: z.boolean(),
-    usersIDs: z.string().array()
+    visibility: z.enum(["public", "private"]),
+    createdBy: z.string(),
+    invitedUsers: z.string().array(),
 })
 
 export type WorkspaceCreationType = z.infer<typeof WorkspaceCreation>
+
+//  Workspace creation form
+export const WorkspaceCreationForm = z.object({
+    name: z.string().min(3).max(32),
+    description: z.string().max(150),
+    visibility: z.enum(["public", "private"]),
+})
+
+export type WorkspaceCreationFormType = z.infer<typeof WorkspaceCreationForm>

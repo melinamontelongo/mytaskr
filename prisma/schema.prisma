@@ -44,10 +44,13 @@ model User {
   username String? @unique
   password String?
 
-  accounts     Account[]
-  sessions     Session[]
-  //  Workspaces the user has created or joined
-  workspaces   Workspace[] @relation(fields: [workspaceIDs], references: [id])
+  accounts Account[]
+  sessions Session[]
+
+  createdWorkspaces Workspace[] @relation("createdWorkspaces")
+
+  //  Workspaces the user is a member of
+  workspaces   Workspace[] @relation("workspaceMember", fields: [workspaceIDs], references: [id])
   workspaceIDs String[]    @db.ObjectId
   //  Boards the user has created or joined
   boards       Board[]     @relation(fields: [boardsIDs], references: [id])
@@ -60,10 +63,12 @@ model Workspace {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
+  createdBy   User     @relation("createdWorkspaces", fields: [creatorId], references: [id])
+  creatorId   String   @db.ObjectId
   //  Privacy status
   isPublic    Boolean
   //  Workspace members
-  users       User[]   @relation(fields: [usersIDs], references: [id])
+  users       User[]   @relation("workspaceMember", fields: [usersIDs], references: [id])
   usersIDs    String[] @db.ObjectId
   //  Boards it contains
   boards      Board[]
