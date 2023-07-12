@@ -18,10 +18,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${inter.className} bg-base-200`}>
+      <body className={`${inter.className} bg-base-200 h-full`}>
         <Providers>
           <Navbar />
-          <div className="md:pt-4 pt-20">
+          <div >
             {children}
           </div>
           <Toaster toastOptions={{

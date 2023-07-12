@@ -8,17 +8,17 @@ import { useRouter } from "next/navigation"
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import SearchUsers from "./SearchUsers";
+import InviteBtnModal from "./InviteBtnModal";
 
 interface CreateWorkspaceFormProps {
     user: Pick<User, "id">
 }
 
 const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
-
+    
+    const router = useRouter();
     const [isPublicChecked, setIsPublicChecked] = useState<boolean>(true);
     const [invitedUsersIDs, setInvitedUsersIDs] = useState<string[]>([]);
-
-    /* <WorkspaceCreationType> */
     const { register, handleSubmit, formState: { errors } } = useForm<WorkspaceCreationFormType>({
         resolver: zodResolver(WorkspaceCreationForm),
         defaultValues: {
@@ -27,8 +27,8 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
     })
 
     const { mutate: createWorkspace, isLoading } = useMutation({
-        mutationFn: async ({ name, description, visibility, createdBy, invitedUsers }: WorkspaceCreationType) => {
-            const payload: WorkspaceCreationType = { name, description, visibility, createdBy, invitedUsers }
+        mutationFn: async ({ name, description, visibility, invitedUsers }: WorkspaceCreationType) => {
+            const payload: WorkspaceCreationType = { name, description, visibility, invitedUsers }
             const { data } = await axios.post("/api/w/create", payload);
             return data;
         },
@@ -36,12 +36,11 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
             return console.log(err)
         },
         onSuccess: () => {
-            return console.log("success")
+            console.log("success");
+            router.refresh()
+            router.push("/")
         },
     })
-    useEffect(() => {
-        console.log("invited users: ", invitedUsersIDs)
-    }, [invitedUsersIDs])
 
     const handleData = (values: WorkspaceCreationFormType) => {
         const {name, description, visibility} = values;
@@ -49,7 +48,6 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
             name, 
             description, 
             visibility,
-            createdBy: user.id,
             invitedUsers: invitedUsersIDs,
         }
         createWorkspace(data);
@@ -120,30 +118,7 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
                             </label>
                         </fieldset>
 
-                        {/* ADD USERS MODAL */}
-                        {/* BTN */}
-                        <label htmlFor="addUsersModal" className="btn bg-base-300 normal-case">Invite users</label>
-                        <label className="label">
-                            <span className="label-text-alt">You can invite other users to collaborate on your workspace.</span>
-                        </label>
-                        {/* MODAL */}
-                        <input type="checkbox" id="addUsersModal" className="modal-toggle" />
-                        <div className="modal">
-                            <div className="modal-box">
-                                <h3 className="font-bold text-lg">Invite</h3>
-
-                                <div className="form-control mb-2">
-                                    <label className="label font-bold text-lg">Email</label>
-                                    {/* search and display users to invite */}
-                                    <SearchUsers inviteUserFn={toggleInvitedUsers} invitedUserIDs={invitedUsersIDs}/>
-                                </div>
-                                
-
-                                <div className="modal-action">
-                                    <label htmlFor="addUsersModal" className="btn">Close!</label>
-                                </div>
-                            </div>
-                        </div>
+                        <InviteBtnModal inviteUserFn={toggleInvitedUsers} invitedUsersIDs={invitedUsersIDs}/>
 
                     </div>
                 </div>

@@ -37,7 +37,7 @@ model Session {
 model User {
   id            String    @id @default(auto()) @map("_id") @db.ObjectId
   name          String?
-  email         String?   @unique
+  email         String   @unique
   emailVerified DateTime?
   image         String?
 
@@ -46,8 +46,9 @@ model User {
 
   accounts Account[]
   sessions Session[]
-
-  createdWorkspaces Workspace[] @relation("createdWorkspaces")
+  
+  //  Workspaces the user has created
+  createdWorkspaces Workspace[]
 
   //  Workspaces the user is a member of
   workspaces   Workspace[] @relation("workspaceMember", fields: [workspaceIDs], references: [id])
@@ -63,7 +64,7 @@ model Workspace {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
-  createdBy   User     @relation("createdWorkspaces", fields: [creatorId], references: [id])
+  createdBy   User     @relation(fields: [creatorId], references: [id], onDelete: Cascade)
   creatorId   String   @db.ObjectId
   //  Privacy status
   isPublic    Boolean
@@ -80,7 +81,7 @@ model Board {
   description String?
   createdAt   DateTime  @default(now())
   //  Workspace it belongs to
-  workspace   Workspace @relation(fields: [workspaceID], references: [id])
+  workspace   Workspace @relation(fields: [workspaceID], references: [id], onDelete: Cascade)
   workspaceID String    @db.ObjectId
   //  Board members
   users       User[]    @relation(fields: [usersIDs], references: [id])
@@ -94,7 +95,7 @@ model List {
   name        String
   description String?
   //  Board it belongs to
-  board       Board   @relation(fields: [boardID], references: [id])
+  board       Board   @relation(fields: [boardID], references: [id], onDelete: Cascade)
   boardID     String  @db.ObjectId
   //  Tasks it contains
   tasks       Task[]
@@ -107,9 +108,9 @@ model Task {
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
   //  List it belongs to
-  list        List     @relation(fields: [listId], references: [id])
+  list        List     @relation(fields: [listId], references: [id], onDelete: Cascade)
   listId      String   @db.ObjectId
   //  User who is asigned to
   user        User?    @relation(fields: [userID], references: [id])
-  userID      String   @db.ObjectId
+  userID      String?   @db.ObjectId
 }

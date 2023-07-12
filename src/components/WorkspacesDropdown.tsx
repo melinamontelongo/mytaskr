@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import { User } from "next-auth";
+import Link from "next/link";
 import { BiChevronDown } from "react-icons/bi"
 
 interface WorkspaceDropdown {
@@ -28,7 +29,15 @@ const WorkspacesDropdown = async ({ userId }: WorkspaceDropdown) => {
                 </div>
                 <div className="divider my-0"></div>
                 {workspaces && workspaces?.length > 0 ? workspaces?.map((w) => {
-                    return <p key={w.id}>{w.name}</p>
+                    return (
+                    <li key={w.id}>
+                        <Link
+                            className="font-bold"
+                            href={`/w/${w.id}`}>
+                            {w.name}
+                        </Link>
+                    </li>
+                    )
                 })
                     :
                     <p>You do not have any workspace yet.</p>

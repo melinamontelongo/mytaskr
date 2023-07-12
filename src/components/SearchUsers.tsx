@@ -9,15 +9,16 @@ import { IoMdAdd, IoMdRemove } from "react-icons/io";
 
 interface SearchUsersProps {
     inviteUserFn: Function,
-    invitedUserIDs: string[],
+    invitedUsersIDs: string[],
+    workspaceID?: string | null
 }
 
-const SearchUsers = ({ inviteUserFn, invitedUserIDs }: SearchUsersProps) => {
+const SearchUsers = ({ inviteUserFn, invitedUsersIDs, workspaceID }: SearchUsersProps) => {
     const [input, setInput] = useState<string>("");
     const { data: usersQueryResults, refetch, isFetched, isFetching, isRefetching } = useQuery({
         queryFn: async () => {
             if (!input) return [];
-            const { data } = await axios.get(`/api/u/search?u=${input}`);
+            const { data } = await axios.get(`/api/u/search?u=${input}${workspaceID ? `&w=${workspaceID}` : ""}`);
             console.log(data)
             return data;
         },
@@ -48,10 +49,10 @@ const SearchUsers = ({ inviteUserFn, invitedUserIDs }: SearchUsersProps) => {
                     usersQueryResults.map((u: User) => {
                         return (
                             <li onClick={() => inviteUserFn(u.id)}
-                                className={`btn ${invitedUserIDs?.includes(u.id) ? "btn-success" : "btn-secondary"} normal-case btn-sm rounded-full`}
+                                className={`btn ${invitedUsersIDs?.includes(u.id) ? "btn-success" : "btn-secondary"} normal-case btn-sm rounded-full`}
                                 key={u.id}>
                                 <span>{u.email}</span>
-                                <span>{invitedUserIDs?.includes(u.id) ? <IoMdRemove /> : <IoMdAdd />}</span>
+                                <span>{invitedUsersIDs?.includes(u.id) ? <IoMdRemove /> : <IoMdAdd />}</span>
                             </li>
                         )
                     })
