@@ -11,10 +11,8 @@ interface InviteBtnModalProps {
 const InviteBtnModal = ({ inviteUserFn, invitedUsersIDs, inviteActionContent, workspaceID }: InviteBtnModalProps) => {
     return (<>
         {/* BTN */}
-        <label htmlFor="addUsersModal" className="btn bg-base-300 normal-case">Invite users</label>
-        <label className="label">
-            <span className="label-text-alt">You can invite other users to collaborate on your workspace.</span>
-        </label>
+        <label htmlFor="addUsersModal" className="btn bg-base-300 normal-case w-full">Invite users</label>
+
         {/* MODAL */}
         <input type="checkbox" id="addUsersModal" className="modal-toggle" />
         <div className="modal">

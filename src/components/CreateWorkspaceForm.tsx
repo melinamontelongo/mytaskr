@@ -15,7 +15,7 @@ interface CreateWorkspaceFormProps {
 }
 
 const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
-    
+
     const router = useRouter();
     const [isPublicChecked, setIsPublicChecked] = useState<boolean>(true);
     const [invitedUsersIDs, setInvitedUsersIDs] = useState<string[]>([]);
@@ -43,10 +43,10 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
     })
 
     const handleData = (values: WorkspaceCreationFormType) => {
-        const {name, description, visibility} = values;
+        const { name, description, visibility } = values;
         const data = {
-            name, 
-            description, 
+            name,
+            description,
             visibility,
             invitedUsers: invitedUsersIDs,
         }
@@ -117,9 +117,12 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
                                 }
                             </label>
                         </fieldset>
-
-                        <InviteBtnModal inviteUserFn={toggleInvitedUsers} invitedUsersIDs={invitedUsersIDs}/>
-
+                        <div className="w-full">
+                            <InviteBtnModal inviteUserFn={toggleInvitedUsers} invitedUsersIDs={invitedUsersIDs} />
+                            <label className="label">
+                                <span className="label-text-alt">You can invite other users to collaborate on your workspace.</span>
+                            </label>
+                        </div>
                     </div>
                 </div>
 

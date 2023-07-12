@@ -1,6 +1,7 @@
 
 import InviteToWorkspace from "@/components/InviteToWorkspace";
 import { db } from "@/lib/db";
+import { transformDocument } from "@prisma/client/runtime";
 import { notFound } from "next/navigation";
 import { BiLockAlt, BiLockOpenAlt } from "react-icons/bi";
 
@@ -19,14 +20,22 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
         include: {
             users: true,
             boards: true,
+            createdBy: {
+                select: {
+                    id: true,
+                    email: true,
+                    name: true,
+                    username: true,
+                }
+            }
         }
     });
 
     if (!workspace) return notFound();
 
     return (
-        <div className="h-screen max-w-2xl mx-auto flex flex-col items-center justify-center gap-5 md:pt-4 pt-36 box-content">
-            <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
+        <div className="h-screen max-w-2xl mx-auto flex flex-col gap-5 md:pt-30 pt-36 box-content">
+            <div className="flex flex-col sm:flex-row justify-center sm:gap-20 sm:items-center gap-5 px-5">
                 <div>
                     <h1 className="font-extrabold text-xl">{workspace.name}</h1>
                     <div className="flex items-center">{workspace.isPublic ?
@@ -45,10 +54,36 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                         </>
                     }
                     </div>
+                    <div>Created by {workspace.createdBy.email}</div>
                 </div>
                 <div>
-                    <InviteToWorkspace workspaceId={params.id}/>
+                    <InviteToWorkspace workspaceId={params.id} />
                 </div>
+            </div>
+
+            <div className="divider"></div>
+            {/* BOARDS */}
+            <div className="flex justify-items-start justify-start">
+                <h3 className="font-extrabold text-xl">Boards</h3>
+            </div>
+            <div>
+                <ul>
+                    {workspace.boards.length > 0 ? workspace.boards.map((board) => {
+                        return <li key={board.id}>{board.name}</li>
+                    }) :
+                        <p>No boards in this workspace.</p>
+                    }
+                </ul>
+            </div>
+            <div className="flex justify-items-start justify-start">
+                <h3 className="font-extrabold text-xl">Members</h3>
+            </div>
+            <div>
+                <ul>
+                    {workspace.users.map((user) => {
+                        return <li key={user.id}>{user.email}</li>
+                    })}
+                </ul>
             </div>
         </div>
     )
