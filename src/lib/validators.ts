@@ -7,6 +7,8 @@ export const UserCredentials = z.object({
 })
 export type UserCredentialsType = z.infer<typeof UserCredentials>
 
+/************ WORKSPACE ************/
+
 //  Workspace creation request
 export const WorkspaceCreation = z.object({
     name: z.string().min(3).max(32),
@@ -29,4 +31,21 @@ export const WorkspaceInvite = z.object({
     invitedUsers: z.string().array(),
     workspaceId: z.string(),
 })
-export type WorkspaceInviteType =  z.infer<typeof WorkspaceInvite>
+export type WorkspaceInviteType = z.infer<typeof WorkspaceInvite>
+
+/************ BOARD ************/
+
+//  Board creation request
+export const BoardCreation = z.object({
+    name: z.string().min(3).max(32),
+    description: z.string().max(150),
+    workspaceId: z.string(),
+})
+export type BoardCreationType = z.infer<typeof BoardCreation>
+
+//  Board creation form
+export const BoardCreationForm = z.object({
+    name: z.string().min(3).max(32),
+    description: z.string().max(150),
+})
+export type BoardCreationFormType = z.infer<typeof BoardCreationForm>

@@ -54,8 +54,8 @@ model User {
   workspaces   Workspace[] @relation("workspaceMember", fields: [workspaceIDs], references: [id])
   workspaceIDs String[]    @db.ObjectId
   //  Boards the user has created or joined
-  boards       Board[]     @relation(fields: [boardsIDs], references: [id])
-  boardsIDs    String[]    @db.ObjectId
+  //boards       Board[]     @relation(fields: [boardsIDs], references: [id])
+  //boardsIDs    String[]    @db.ObjectId
   //  Tasks the user was assigned to
   Task         Task[]
 }
@@ -84,8 +84,8 @@ model Board {
   workspace   Workspace @relation(fields: [workspaceID], references: [id], onDelete: Cascade)
   workspaceID String    @db.ObjectId
   //  Board members
-  users       User[]    @relation(fields: [usersIDs], references: [id])
-  usersIDs    String[]  @db.ObjectId
+  //users       User[]    @relation(fields: [usersIDs], references: [id])
+  //usersIDs    String[]  @db.ObjectId
   //  Lists it contains
   lists       List[]
 }

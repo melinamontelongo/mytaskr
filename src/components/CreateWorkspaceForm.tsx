@@ -5,9 +5,8 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { User } from "next-auth"
 import { useRouter } from "next/navigation"
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useForm } from "react-hook-form";
-import SearchUsers from "./SearchUsers";
 import InviteBtnModal from "./InviteBtnModal";
 
 interface CreateWorkspaceFormProps {
