@@ -2,6 +2,7 @@
 import InviteToWorkspace from "@/components/InviteToWorkspace";
 import { db } from "@/lib/db";
 import { transformDocument } from "@prisma/client/runtime";
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BiLockAlt, BiLockOpenAlt } from "react-icons/bi";
 
@@ -57,14 +58,17 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     <div>Created by {workspace.createdBy.email}</div>
                 </div>
                 <div>
-                    <InviteToWorkspace workspaceId={params.id} />
+                    A
                 </div>
             </div>
 
             <div className="divider"></div>
             {/* BOARDS */}
-            <div className="flex justify-items-start justify-start">
+            <div className="flex flex-row items-center justify-between">
                 <h3 className="font-extrabold text-xl">Boards</h3>
+                <div className="w-32">
+                <Link className="btn bg-base-300 normal-case w-full" href="/b/create">Create board</Link>
+                </div>
             </div>
             <div>
                 <ul>
@@ -75,8 +79,12 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     }
                 </ul>
             </div>
-            <div className="flex justify-items-start justify-start">
+            {/* MEMBERS */}
+            <div className="flex flex-row items-center justify-between">
                 <h3 className="font-extrabold text-xl">Members</h3>
+                <div className="w-32">
+                    <InviteToWorkspace workspaceId={params.id} />
+                </div>
             </div>
             <div>
                 <ul>
