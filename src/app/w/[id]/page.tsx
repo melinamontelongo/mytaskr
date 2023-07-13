@@ -1,7 +1,5 @@
-
 import InviteToWorkspace from "@/components/InviteToWorkspace";
 import { db } from "@/lib/db";
-import { transformDocument } from "@prisma/client/runtime";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { BiLockAlt, BiLockOpenAlt } from "react-icons/bi";
@@ -73,7 +71,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
             <div>
                 <ul>
                     {workspace.boards.length > 0 ? workspace.boards.map((board) => {
-                        return <li key={board.id}>{board.name}</li>
+                        return <li><Link href={`/b/${board.id}`} key={board.id}>{board.name}</Link></li>
                     }) :
                         <p>No boards in this workspace.</p>
                     }

@@ -49,3 +49,20 @@ export const BoardCreationForm = z.object({
     description: z.string().max(150),
 })
 export type BoardCreationFormType = z.infer<typeof BoardCreationForm>
+
+/************ LIST ************/
+
+//  List creation
+export const ListCreation = z.object({
+    name: z.string().min(3).max(32),
+    description: z.string().max(150).optional(),
+    boardId: z.string(),
+});
+export type ListCreationType = z.infer<typeof ListCreation>
+
+//  List creation form
+export const ListCreationForm = z.object({
+    name: z.string().min(3).max(32),
+    description: z.string().max(150).optional(),
+})
+export type ListCreationFormType = z.infer<typeof ListCreationForm>

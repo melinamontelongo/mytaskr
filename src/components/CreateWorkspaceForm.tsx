@@ -81,7 +81,7 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Description</label>
                             <textarea className="textarea textarea-bordered"  {...register("description")} />
-                            {errors.name && <p className="text-error text-sm">Invalid description</p>}
+                            {errors.description && <p className="text-error text-sm">Invalid description</p>}
                             <label className="label">
                                 <span className="label-text-alt">Describe the purpose of this workspace.</span>
                             </label>

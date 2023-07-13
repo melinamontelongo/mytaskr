@@ -25,7 +25,7 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
             const payload: BoardCreationType = { name, description, workspaceId };
             const { data } = await axios.post("/api/b/create", payload)
             return data;
-        },
+        },//   TODO: TOASTS
         onError: (err) => {
             return console.log(err)
         },
@@ -44,7 +44,7 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Name</label>
                             <input type="text" className="input input-bordered" {...register("name")} />
-                            {errors.name && <p className="text-error text-sm">Invalid workspace name</p>}
+                            {errors.name && <p className="text-error text-sm">Invalid board name</p>}
                             <label className="label">
                                 <span className="label-text-alt">This is the name of your new board.</span>
                             </label>
@@ -53,7 +53,7 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Description</label>
                             <textarea className="textarea textarea-bordered"  {...register("description")} />
-                            {errors.name && <p className="text-error text-sm">Invalid description</p>}
+                            {errors.description && <p className="text-error text-sm">Invalid description</p>}
                             <label className="label">
                                 <span className="label-text-alt">Describe the purpose of this board.</span>
                             </label>
