@@ -85,7 +85,7 @@ export async function PATCH(req: Request) {
 
         //  Find prev list if exists
         if (prevListId) {
-            prevList = await db.task.findFirst({
+            prevList = await db.list.findFirst({
                 where: {
                     id: prevListId
                 },
@@ -96,7 +96,7 @@ export async function PATCH(req: Request) {
         }
         //  Find next list if exists
         if (nextListId) {
-            nextList = await db.task.findFirst({
+            nextList = await db.list.findFirst({
                 where: {
                     id: nextListId,
                 },
@@ -116,7 +116,7 @@ export async function PATCH(req: Request) {
             throw new Error("Something went wrong.")
         }
         if (newIndexNumber) {
-            await db.task.update({
+            await db.list.update({
                 where: {
                     id: listId,
                 },

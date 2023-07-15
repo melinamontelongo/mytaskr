@@ -15,7 +15,7 @@ interface ListContainerProps {
 
 const ListContainer = ({ list, index }: ListContainerProps) => {
     return (
-        <Draggable draggableId={`draggable${list.id}`} index={index}>
+        <Draggable draggableId={list.id} index={index}>
             {provided => ( 
                 <div 
                 {...provided.dragHandleProps}
@@ -28,7 +28,7 @@ const ListContainer = ({ list, index }: ListContainerProps) => {
                     <div className="overflow-y-auto w-64 h-96">
                         <div className="px-2 pb-2">
                             <div>
-                                <Droppable droppableId={`droppable${list.id}`} type="task">
+                                <Droppable droppableId={list.id} type="task">
                                     {provided => (
                                         <div
                                             ref={provided.innerRef}

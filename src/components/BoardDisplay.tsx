@@ -26,8 +26,8 @@ interface BoardDisplayProps {
 
 const BoardDisplay = ({ board }: BoardDisplayProps) => {
     const router = useRouter();
-    const [lists, setLists] = useState(board.lists);
-    
+    const [boardInfo, setBoardInfo] = useState(board);
+
     console.log(board)
     const { mutate: reorderTasks } = useMutation({
         mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
@@ -88,7 +88,6 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
         if (type === "task") {
             const sourceList = board.lists.filter((list) => list.id === source.droppableId)[0];
             const destinationList = board.lists.filter((list) => list.id === destination.droppableId)[0];
-
             //  Moving task on same list
             if (sourceList === destinationList) {
                 //  Array of task IDs
@@ -113,14 +112,14 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
                     ...sourceList,
                     tasks: taskArr
                 }
-                const updatedLists: ExtendedList[] = lists.map((l) => {
+                const updatedLists: ExtendedList[] = boardInfo.lists.map((l) => {
                     if (l.id === orderedList.id) {
                         l = orderedList;
                     }
                     return l;
                 })
                 //  Update state
-                setLists(updatedLists);
+                setBoardInfo({ ...boardInfo, lists: updatedLists });
                 return;
             }
 
@@ -165,7 +164,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             //  Modify db
             reorderTasksBetweenLists({ taskId: draggableId, listId: destinationList.id, taskIds: destinationTaskIds })
 
-            const updatedLists: ExtendedList[] = lists.map((l) => {
+            const updatedLists: ExtendedList[] = board.lists.map((l) => {
                 if (l.id === sourceList.id) {
                     l = orderedSourceList;
                 }
@@ -174,13 +173,30 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
                 }
                 return l;
             });
-            setLists(updatedLists);
+            setBoardInfo({ ...boardInfo, lists: updatedLists });
             return;
         }
         //  If lists are being handled
         if (type === "list") {
+            console.log(board.lists)
+            const boardListsIds = board.lists.map((list) => list.id);
+            boardListsIds.splice(source.index, 1);
+            boardListsIds.splice(destination.index, 0, draggableId);
+            //  Modify list index on db
+            reorderLists({listId: draggableId, listsIds: boardListsIds})
 
+            //  Update UI
+            const listArr: any = [];
+            boardListsIds.map((id) => {
+                board.lists.map((l) => {
+                    if (l.id === id) listArr.push(l)
+                    return
+                })
+                return listArr;
+            })
+            setBoardInfo({...boardInfo, lists: listArr})
         }
+
     }
 
     return (
@@ -189,7 +205,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
                 <Droppable droppableId="listsDroppable" direction="horizontal" type="list">
                     {provided => (
                         <div className="flex flex-row gap-5"{...provided.droppableProps} ref={provided.innerRef}>
-                            {lists.map((list, index) => {
+                            {boardInfo.lists.map((list, index) => {
                                 return <ListContainer key={list.id} list={list} index={index} />
                             })}
                             {provided.placeholder}
