@@ -99,6 +99,8 @@ model List {
   boardID     String  @db.ObjectId
   //  Tasks it contains
   tasks       Task[]
+
+  indexNumber Int
 }
 
 model Task {
@@ -113,4 +115,6 @@ model Task {
   //  User who is asigned to
   user        User?    @relation(fields: [userID], references: [id])
   userID      String?   @db.ObjectId
+  
+  indexNumber Int
 }
