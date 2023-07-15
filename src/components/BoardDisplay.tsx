@@ -1,13 +1,14 @@
 "use client"
 import { Board, List, Task } from "@prisma/client";
 import ListContainer from "./ListContainer";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { ListUpdate, ListUpdateType, TaskUpdateType } from "@/lib/validators";
 
-interface OrderedList extends ExtendedList{
+interface OrderedList extends ExtendedList {
     tasksIds: string[]
 }
 interface ExtendedList extends List {
@@ -21,21 +22,17 @@ interface ExtendedBoard extends Board {
 interface BoardDisplayProps {
     board: ExtendedBoard
 }
-type mutationProps = {
-    taskId: string,
-    listId: string,
-    taskIds: string[]
-}
+
+
 const BoardDisplay = ({ board }: BoardDisplayProps) => {
     const router = useRouter();
     const [lists, setLists] = useState(board.lists);
-    useEffect(() => {
-        console.log(lists)
-    }, [lists]) 
-    const {mutate: reorderTasks} = useMutation({
-        mutationFn: async({taskId, listId, taskIds}:mutationProps) => {
-            const payload = {taskId, listId, taskIds}
-            const {data} = await axios.patch("/api/b/create/task/", payload)
+    
+    console.log(board)
+    const { mutate: reorderTasks } = useMutation({
+        mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
+            const payload = { taskId, listId, taskIds }
+            const { data } = await axios.patch("/api/b/create/task/", payload)
             return data;
         },//   TODO: TOASTS
         onError: (err) => {
@@ -46,53 +43,159 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             router.refresh()
         }
     })
-    const onDragEnd = async(result: any) => {
-        const { destination, source, draggableId } = result;
+
+    const { mutate: reorderTasksBetweenLists } = useMutation({
+        mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
+            const payload = { taskId, listId, taskIds }
+            const { data } = await axios.put("/api/b/create/task/", payload)
+            return data;
+        },//   TODO: TOASTS
+        onError: (err) => {
+            return console.log(err)
+        },
+        onSuccess: () => {
+            console.log("success")
+            router.refresh()
+        }
+    })
+
+    const { mutate: reorderLists } = useMutation({
+        mutationFn: async ({ listId, listsIds }: ListUpdateType) => {
+            const payload = { listId, listsIds }
+            const { data } = await axios.patch("/api/b/create/list/", payload)
+            return data;
+        },//   TODO: TOASTS
+        onError: (err) => {
+            return console.log(err)
+        },
+        onSuccess: () => {
+            console.log("success")
+            router.refresh()
+        }
+    })
+
+    const onDragEnd = async (result: any) => {
+        const { destination, source, draggableId, type } = result;
 
         if (!destination) return;
+
         //  Dropped on same place
         if (destination.droppableId === source.droppableId &&
             destination.index === source.index) {
             return
         }
-        //  List
-        const list = board.lists.filter((list) => list.id === source.droppableId)[0];
-        const taskIds = list.tasks.map((task) => task.id)
-        //  Re-order ids
-        taskIds.splice(source.index, 1);
-        taskIds.splice(destination.index, 0, draggableId);
+        //  If tasks are being handled
+        if (type === "task") {
+            const sourceList = board.lists.filter((list) => list.id === source.droppableId)[0];
+            const destinationList = board.lists.filter((list) => list.id === destination.droppableId)[0];
 
-        reorderTasks({taskId: draggableId, listId: list.id, taskIds})
+            //  Moving task on same list
+            if (sourceList === destinationList) {
+                //  Array of task IDs
+                const taskIds = sourceList.tasks.map((task) => task.id)
+                //  Re-order ids
+                taskIds.splice(source.index, 1);
+                taskIds.splice(destination.index, 0, draggableId);
 
-        //  Update UI
+                //  Modify db
+                reorderTasks({ taskId: draggableId, listId: sourceList.id, taskIds })
 
-        const taskArr:any = [];
-        taskIds.map((id) => {
-            list.tasks.map((t) => {
-                if(t.id === id) taskArr.push(t)
-                return
-            })
-            return taskArr;
-        })
-        const orderedList = {
-            ...list,
-            tasks: taskArr
-        }
-        const updatedLists = lists.map((l) => {
-            if(l.id === orderedList.id){
-                l = orderedList;
+                //  Update UI
+                const taskArr: any = [];
+                taskIds.map((id) => {
+                    sourceList.tasks.map((t) => {
+                        if (t.id === id) taskArr.push(t)
+                        return
+                    })
+                    return taskArr;
+                })
+                const orderedList = {
+                    ...sourceList,
+                    tasks: taskArr
+                }
+                const updatedLists: ExtendedList[] = lists.map((l) => {
+                    if (l.id === orderedList.id) {
+                        l = orderedList;
+                    }
+                    return l;
+                })
+                //  Update state
+                setLists(updatedLists);
+                return;
             }
-            return l;
-        })
-        setLists(updatedLists);
+
+            //  Moving task to another list
+            //  Change source list
+            const sourceTaskIds = sourceList.tasks.map((task) => task.id);
+            sourceTaskIds.splice(source.index, 1);
+            const sourceTaskArr: any = [];
+            sourceTaskIds.map((id) => {
+                sourceList.tasks.map((t) => {
+                    if (t.id === id) sourceTaskArr.push(t)
+                    return
+                })
+                return sourceTaskArr;
+            })
+            const orderedSourceList = {
+                ...sourceList,
+                tasks: sourceTaskArr,
+            };
+            //  Change destination list
+            const destinationTaskIds = destinationList.tasks.map((task) => task.id);
+            destinationTaskIds.splice(destination.index, 0, draggableId);
+            const destinationTaskArr: any = [];
+            destinationTaskIds.map((id) => {
+                //  Get destination tasks
+                destinationList.tasks.map((t) => {
+                    if (t.id === id) destinationTaskArr.push(t);
+                    return;
+                })
+                //  Find new task on source list
+                sourceList.tasks.map((t) => {
+                    if (t.id === id) destinationTaskArr.push(t);
+                    return;
+                })
+                return destinationTaskArr;
+            })
+            const orderedDestinationList = {
+                ...destinationList,
+                tasks: destinationTaskArr,
+            };
+
+            //  Modify db
+            reorderTasksBetweenLists({ taskId: draggableId, listId: destinationList.id, taskIds: destinationTaskIds })
+
+            const updatedLists: ExtendedList[] = lists.map((l) => {
+                if (l.id === sourceList.id) {
+                    l = orderedSourceList;
+                }
+                if (l.id === destinationList.id) {
+                    l = orderedDestinationList;
+                }
+                return l;
+            });
+            setLists(updatedLists);
+            return;
+        }
+        //  If lists are being handled
+        if (type === "list") {
+
+        }
     }
 
     return (
-        <div className="flex flex-row gap-5">
+        <div className="">
             <DragDropContext onDragEnd={onDragEnd}>
-                {lists.map((list) => {
-                    return <ListContainer key={list.id} list={list} />
-                })}
+                <Droppable droppableId="listsDroppable" direction="horizontal" type="list">
+                    {provided => (
+                        <div className="flex flex-row gap-5"{...provided.droppableProps} ref={provided.innerRef}>
+                            {lists.map((list, index) => {
+                                return <ListContainer key={list.id} list={list} index={index} />
+                            })}
+                            {provided.placeholder}
+                        </div>
+                    )}
+                </Droppable>
             </DragDropContext>
         </div>
     )

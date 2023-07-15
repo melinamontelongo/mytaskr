@@ -1,9 +1,9 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { ListCreation } from "@/lib/validators";
-import {z} from "zod";
+import { ListCreation, ListUpdate } from "@/lib/validators";
+import { z } from "zod";
 
-export async function POST(req:Request){
+export async function POST(req: Request) {
     try {
         const session = await getAuthSession();
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
@@ -24,9 +24,9 @@ export async function POST(req:Request){
                 where: {
                     boardID: boardId,
                 },
-               _max: {
+                _max: {
                     indexNumber: true,
-               }
+                }
             })
             if (maxIndexList._max.indexNumber) {
                 //  Create list increasing index
@@ -39,7 +39,7 @@ export async function POST(req:Request){
             } else {
                 throw new Error("Something went wrong");
             }
-        //  It's the first one in this board
+            //  It's the first one in this board
         } else {
             await db.list.create({
                 data: {
@@ -58,3 +58,80 @@ export async function POST(req:Request){
         return new Response("Could not create list, please try again later.", { status: 500 });
     }
 };
+
+export async function PATCH(req: Request) {
+    try {
+        const session = await getAuthSession();
+        if (!session?.user) return new Response("Unauthorized", { status: 401 });
+        const body = await req.json();
+        const { listId, listsIds } = ListUpdate.parse(body);
+
+        const listIndex = listsIds.findIndex((id) => id === listId);
+
+        const prevListId = listsIds[listIndex - 1];
+        const nextListId = listsIds[listIndex + 1];
+
+        let prevList, nextList, newIndexNumber;
+
+        //  Find list to be re-ordered
+        const list = await db.list.findFirst({
+            where: {
+                id: listId,
+            },
+            select: {
+                indexNumber: true,
+            }
+        });
+
+        //  Find prev list if exists
+        if (prevListId) {
+            prevList = await db.task.findFirst({
+                where: {
+                    id: prevListId
+                },
+                select: {
+                    indexNumber: true,
+                }
+            })
+        }
+        //  Find next list if exists
+        if (nextListId) {
+            nextList = await db.task.findFirst({
+                where: {
+                    id: nextListId,
+                },
+                select: {
+                    indexNumber: true,
+                }
+            })
+        }
+
+        if (prevList && nextList) {
+            newIndexNumber = (prevList.indexNumber + nextList.indexNumber) / 2;
+        } else if (prevList && !nextList) {
+            newIndexNumber = prevList.indexNumber * 2
+        } else if (!prevList && nextList) {
+            newIndexNumber = nextList.indexNumber / 2
+        } else {
+            throw new Error("Something went wrong.")
+        }
+        if (newIndexNumber) {
+            await db.task.update({
+                where: {
+                    id: listId,
+                },
+                data: {
+                    indexNumber: Math.round(newIndexNumber),
+                }
+            })
+        }
+        return new Response("Tasks reordered successfully!")
+    } catch (e) {
+        console.log(e)
+        if (e instanceof z.ZodError) {
+            //  Wrong data was sent
+            return new Response("Invalid request data passed.", { status: 422 })
+        }
+        return new Response("Could not reorder tasks, please try again later.", { status: 500 })
+    }
+}

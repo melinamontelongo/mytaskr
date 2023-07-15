@@ -9,7 +9,7 @@ interface ListItemProps {
 }
 
 const ListItem = ({ task, index }: ListItemProps) => {
-    
+
     return (<>
     <Draggable draggableId={task.id} index={index}>
         {provided => (

@@ -2,7 +2,7 @@ import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { TaskCreation, TaskUpdate } from "@/lib/validators";
 import { z } from "zod";
-
+//  Create task
 export async function POST(req: Request) {
     try {
         const session = await getAuthSession();
@@ -57,7 +57,7 @@ export async function POST(req: Request) {
         return new Response("Could not create task, please try again later.", { status: 500 });
     }
 }
-
+//  Modify position inside same list
 export async function PATCH(req: Request) {
     try {
         const session = await getAuthSession();
@@ -102,16 +102,16 @@ export async function PATCH(req: Request) {
                 }
             })
         }
-        if(prevTask && nextTask) {
+        if (prevTask && nextTask) {
             newIndexNumber = (prevTask.indexNumber + nextTask.indexNumber) / 2;
-        } else if (prevTask && !nextTask){
+        } else if (prevTask && !nextTask) {
             newIndexNumber = prevTask.indexNumber * 2
-        } else if (!prevTask && nextTask){
+        } else if (!prevTask && nextTask) {
             newIndexNumber = nextTask.indexNumber / 2
         } else {
             throw new Error("Something went wrong.")
         }
-        if(newIndexNumber){
+        if (newIndexNumber) {
             await db.task.update({
                 where: {
                     id: taskId,
@@ -121,7 +121,6 @@ export async function PATCH(req: Request) {
                 }
             })
         }
-
         return new Response("Tasks reordered successfully!")
     } catch (e) {
         console.log(e)
@@ -129,6 +128,83 @@ export async function PATCH(req: Request) {
             //  Wrong data was sent
             return new Response("Invalid request data passed.", { status: 422 })
         }
-        return new Response("Could not create send invitations, please try again later.", { status: 500 })
+        return new Response("Could not reorder tasks, please try again later.", { status: 500 })
+    }
+}
+//  Modify position between lists
+export async function PUT(req: Request) {
+    try {
+        const session = await getAuthSession();
+        if (!session?.user) return new Response("Unauthorized", { status: 401 });
+        const body = await req.json();
+        const { listId, taskId, taskIds } = TaskUpdate.parse(body);
+
+        const taskIndex = taskIds.findIndex((id) => id === taskId);
+
+        const prevTaskId = taskIds[taskIndex - 1]
+        const nextTaskId = taskIds[taskIndex + 1]
+
+        let prevTask, nextTask, newIndexNumber;
+        //  Find task to be re-ordered
+        const task = await db.task.findFirst({
+            where: {
+                id: taskId,
+            },
+            select: {
+                indexNumber: true,
+            }
+        });
+
+        //  Find prev task if exists
+        if (prevTaskId) {
+            prevTask = await db.task.findFirst({
+                where: {
+                    id: prevTaskId
+                },
+                select: {
+                    indexNumber: true,
+                }
+            })
+        }
+        //  Find next task if exists
+        if (nextTaskId) {
+            nextTask = await db.task.findFirst({
+                where: {
+                    id: nextTaskId,
+                },
+                select: {
+                    indexNumber: true,
+                }
+            })
+        }
+
+        if (prevTask && nextTask) {
+            newIndexNumber = (prevTask.indexNumber + nextTask.indexNumber) / 2;
+        } else if (prevTask && !nextTask) {
+            newIndexNumber = prevTask.indexNumber * 2
+        } else if (!prevTask && nextTask) {
+            newIndexNumber = nextTask.indexNumber / 2
+        } else {
+            throw new Error("Something went wrong.")
+        }
+        if (newIndexNumber) {
+            await db.task.update({
+                where: {
+                    id: taskId,
+                },
+                data: {
+                    indexNumber: Math.round(newIndexNumber),
+                    listId: listId,
+                }
+            })
+        }
+        return new Response("Tasks reordered successfully!")
+    } catch (e) {
+        console.log(e)
+        if (e instanceof z.ZodError) {
+            //  Wrong data was sent
+            return new Response("Invalid request data passed.", { status: 422 })
+        }
+        return new Response("Could not reorder tasks, please try again later.", { status: 500 })
     }
 }
