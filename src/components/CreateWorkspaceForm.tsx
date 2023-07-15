@@ -1,29 +1,26 @@
 "use client"
+import axios from "axios";
 import { WorkspaceCreationForm, WorkspaceCreationFormType, WorkspaceCreationType } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
-import { User } from "next-auth"
-import { useRouter } from "next/navigation"
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 import InviteBtnModal from "./InviteBtnModal";
 
-interface CreateWorkspaceFormProps {
-    user: Pick<User, "id">
-}
-
-const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
-
+const CreateWorkspaceForm = () => {
     const router = useRouter();
+
     const [isPublicChecked, setIsPublicChecked] = useState<boolean>(true);
     const [invitedUsersIDs, setInvitedUsersIDs] = useState<string[]>([]);
+
     const { register, handleSubmit, formState: { errors } } = useForm<WorkspaceCreationFormType>({
         resolver: zodResolver(WorkspaceCreationForm),
         defaultValues: {
             "visibility": "public"
         }
-    })
+    });
 
     const { mutate: createWorkspace, isLoading } = useMutation({
         mutationFn: async ({ name, description, visibility, invitedUsers }: WorkspaceCreationType) => {
@@ -32,14 +29,14 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
             return data;
         },
         onError: (err) => {
-            return console.log(err)
+            return toast.error("Could not create workspace.");
         },
         onSuccess: () => {
-            console.log("success");
-            router.refresh()
-            router.push("/")
+            toast.success("Workspace created successfully!");
+            router.refresh();
+            router.push("/");
         },
-    })
+    });
 
     const handleData = (values: WorkspaceCreationFormType) => {
         const { name, description, visibility } = values;
@@ -48,15 +45,15 @@ const CreateWorkspaceForm = ({ user }: CreateWorkspaceFormProps) => {
             description,
             visibility,
             invitedUsers: invitedUsersIDs,
-        }
+        };
         createWorkspace(data);
-    }
+    };
 
     const toggleInvitedUsers = (newID: string) => {
         const alreadyExists = invitedUsersIDs?.filter((id) => id === newID);
         // Remove
         if (alreadyExists.length > 0) {
-            const newInvitedUsersArr = invitedUsersIDs.filter((id) => id !== newID)
+            const newInvitedUsersArr = invitedUsersIDs.filter((id) => id !== newID);
             setInvitedUsersIDs(newInvitedUsersArr);
             return;
         }

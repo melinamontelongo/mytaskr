@@ -10,8 +10,7 @@ const CreateWorkspacePage = async () => {
                 <div>
                     <h1 className="font-extrabold text-4xl text-center">Create Workspace</h1>
                 </div>
-                <CreateWorkspaceForm user={session.user} />
-
+                <CreateWorkspaceForm />
             </div>
         </div>
     )

@@ -1,21 +1,22 @@
 "use client"
-import { BoardCreation, BoardCreationForm, BoardCreationFormType, BoardCreationType } from "@/lib/validators";
+import axios from "axios";
+import { BoardCreation, BoardCreationType } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Workspace } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 interface CreateBoardFormProps {
     workspaces?: Workspace[],
     createdWorkspaces?: Workspace[],
-}
+};
 
 const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps) => {
     const router = useRouter();
-    const [selectedWorkspaceID, setSelectedWorkspaceID] = useState<string>("")
+    const [selectedWorkspaceID, setSelectedWorkspaceID] = useState<string>("");
     const { handleSubmit, register, formState: { errors } } = useForm<BoardCreationType>({
         resolver: zodResolver(BoardCreation)
     });
@@ -23,18 +24,18 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
     const { mutate: createBoard, isLoading } = useMutation({
         mutationFn: async ({ name, description, workspaceId }: BoardCreationType) => {
             const payload: BoardCreationType = { name, description, workspaceId };
-            const { data } = await axios.post("/api/b/create", payload)
+            const { data } = await axios.post("/api/b/create", payload);
             return data;
-        },//   TODO: TOASTS
+        },
         onError: (err) => {
-            return console.log(err)
+            return toast.error("Could not create board.");
         },
         onSuccess: () => {
-            console.log("success")
-            router.push(`/w/${selectedWorkspaceID}`)
-            router.refresh()
-        }
-    })
+            toast.error("Board created successfully!");
+            router.push(`/w/${selectedWorkspaceID}`);
+            router.refresh();
+        },
+    });
 
     return (
         <div className="mx-auto">
@@ -81,10 +82,7 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                                 <span className="label-text-alt">This is where your board will belong to.</span>
                             </label>
                         </div>
-
                     </div>
-
-
                 </div>
                 <button type="submit" className="btn btn-primary w-full mx-auto">
                     {isLoading ? <span className="loading loading-spinner"></span>

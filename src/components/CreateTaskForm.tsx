@@ -1,34 +1,34 @@
 "use client"
-
+import axios from "axios";
 import { TaskCreationForm, TaskCreationFormType, TaskCreationType } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 interface CreateListFormProps {
     listId: string,
-}
+};
 
 const CreateTaskForm = ({ listId }: CreateListFormProps) => {
     const router = useRouter();
     const { handleSubmit, register, formState: { errors }, reset } = useForm<TaskCreationFormType>({
         resolver: zodResolver(TaskCreationForm)
-    })
+    });
     const { mutate: createList, isLoading } = useMutation({
         mutationFn: async ({ name, description, listId }: TaskCreationType) => {
-            const payload: TaskCreationType = { name, description, listId }
-            const { data } = await axios.post("/api/b/create/task", payload)
+            const payload: TaskCreationType = { name, description, listId };
+            const { data } = await axios.post("/api/b/create/task", payload);
             return data;
-        },//   TODO: TOASTS
+        },
         onError: (err) => {
-            return console.log(err)
+            return toast.error("Could not create task.")
         },
         onSuccess: () => {
-            console.log("success")
-            reset()
-            router.refresh()
+            toast.success("Task created successfully!")
+            reset();
+            router.refresh();
         }
     })
     return (
