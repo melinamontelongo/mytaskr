@@ -1,11 +1,11 @@
 "use client"
-
 import { useQuery } from "@tanstack/react-query";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 import debounce from "lodash.debounce";
 import axios from "axios";
 import { User } from "next-auth";
 import { IoMdAdd, IoMdRemove } from "react-icons/io";
+import { BiLoaderAlt } from "react-icons/bi";
 
 interface SearchUsersProps {
     inviteUserFn: Function,
@@ -19,7 +19,6 @@ const SearchUsers = ({ inviteUserFn, invitedUsersIDs, workspaceID }: SearchUsers
         queryFn: async () => {
             if (!input) return [];
             const { data } = await axios.get(`/api/u/search?u=${input}${workspaceID ? `&w=${workspaceID}` : ""}`);
-            console.log(data)
             return data;
         },
         queryKey: ["search-users"],
@@ -43,25 +42,31 @@ const SearchUsers = ({ inviteUserFn, invitedUsersIDs, workspaceID }: SearchUsers
                 setInput(e.target.value)
                 debounceRequest();
             }} />
-        {input.length > 0 ? (
-            <ul className="flex flex-row my-5 mx-2">
-                {usersQueryResults?.length > 0 && (
-                    usersQueryResults.map((u: User) => {
-                        return (
-                            <li onClick={() => inviteUserFn(u.id)}
-                                className={`btn ${invitedUsersIDs?.includes(u.id) ? "btn-success" : "btn-secondary"} normal-case btn-sm rounded-full`}
-                                key={u.id}>
-                                <span>{u.email}</span>
-                                <span>{invitedUsersIDs?.includes(u.id) ? <IoMdRemove /> : <IoMdAdd />}</span>
-                            </li>
-                        )
-                    })
-                )}
-            </ul>
-        )
-            :
-            null
-        }
+        <div className="flex items-center h-16">
+            {input.length > 0 ? (<>
+                {isFetching && <BiLoaderAlt className="animate-spin text-2xl mx-auto" />}
+                <ul className="flex flex-row mx-2 my-2">
+                    {usersQueryResults && usersQueryResults?.length > 0 ? (
+                        usersQueryResults?.map((u: User) => {
+                            return (
+                                <li onClick={() => inviteUserFn(u.id)}
+                                    className={`btn ${invitedUsersIDs?.includes(u.id) ? "btn-success" : "btn-secondary"} normal-case btn-sm rounded-full`}
+                                    key={u.id}>
+                                    <span>{u.email}</span>
+                                    <span>{invitedUsersIDs?.includes(u.id) ? <IoMdRemove /> : <IoMdAdd />}</span>
+                                </li>
+                            )
+                        })
+                    )
+                        :
+                        !isFetching && !isRefetching && isFetched && <p>No users found.</p>
+                    }
+                </ul>
+            </>)
+                :
+                null
+            }
+        </div>
     </>
     )
 }

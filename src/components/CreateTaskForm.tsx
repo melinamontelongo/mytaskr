@@ -23,11 +23,14 @@ const CreateTaskForm = ({ listId }: CreateListFormProps) => {
             return data;
         },
         onError: (err) => {
-            return toast.error("Could not create task.")
+            return toast.error("Could not create task.");
         },
         onSuccess: () => {
-            toast.success("Task created successfully!")
+            toast.success("Task created successfully!");
             reset();
+            //  Close modal
+            const checkModal = document.getElementById(listId);
+            checkModal?.click()
             router.refresh();
         }
     })

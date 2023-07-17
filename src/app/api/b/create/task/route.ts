@@ -184,8 +184,11 @@ export async function PUT(req: Request) {
             newIndexNumber = prevTask.indexNumber * 2
         } else if (!prevTask && nextTask) {
             newIndexNumber = nextTask.indexNumber / 2
+            //  It's going to be first task on a list without tasks
+        } else if(!prevTask && !nextTask && task) {
+            newIndexNumber = 1040;
         } else {
-            throw new Error("Something went wrong.")
+            throw new Error("Something went wrong.");
         }
         if (newIndexNumber) {
             await db.task.update({

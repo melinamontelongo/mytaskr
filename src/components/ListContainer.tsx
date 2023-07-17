@@ -2,7 +2,6 @@
 import { List, Task } from "@prisma/client";
 import ListItem from "./ListItem";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { useRef } from "react";
 import CreateTaskBtnModal from "./CreateTaskBtnModal";
 
 interface ExtendedList extends List {
@@ -11,11 +10,14 @@ interface ExtendedList extends List {
 interface ListContainerProps {
     list: ExtendedList,
     index: number,
+    isListLoading: boolean,
+    isTaskLoading: boolean,
 }
 
-const ListContainer = ({ list, index }: ListContainerProps) => {
+const ListContainer = ({ list, index, isListLoading, isTaskLoading }: ListContainerProps) => {
+
     return (
-        <Draggable draggableId={list.id} index={index}>
+        <Draggable draggableId={list.id} index={index} isDragDisabled={isListLoading}>
             {provided => ( 
                 <div 
                 {...provided.dragHandleProps}
@@ -26,15 +28,15 @@ const ListContainer = ({ list, index }: ListContainerProps) => {
                         <h3 className="font-bold text-xl">{list.name}</h3>
                     </div>
                     <div className="overflow-y-auto w-64 h-96">
-                        <div className="px-2 pb-2">
-                            <div>
+                        <div className="px-2 pb-2 h-[22rem]">
+                            <div className="h-full">
                                 <Droppable droppableId={list.id} type="task">
                                     {provided => (
-                                        <div
+                                        <div className="h-full"
                                             ref={provided.innerRef}
                                             {...provided.droppableProps}>
                                             {list.tasks.map((task, index) => {
-                                                return <ListItem key={task.id} task={task} index={index} />
+                                                return <ListItem key={task.id} task={task} index={index} isTaskLoading={isTaskLoading}/>
                                             })}
                                             {provided.placeholder}
                                         </div>

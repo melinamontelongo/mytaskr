@@ -5,12 +5,14 @@ import InviteBtnModal from "./InviteBtnModal";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { WorkspaceInvite, WorkspaceInviteType } from "@/lib/validators";
+import { useRouter } from "next/navigation";
 
 interface InviteToWorkspaceProps {
     workspaceId: string,
 }
 
 const InviteToWorkspace = ({ workspaceId }: InviteToWorkspaceProps) => {
+    const router = useRouter();
     const [invitedUsersIDs, setInvitedUsersIDs] = useState<string[]>([]);
 
     const { mutate: invite, isLoading } = useMutation({
@@ -45,6 +47,7 @@ const InviteToWorkspace = ({ workspaceId }: InviteToWorkspaceProps) => {
         } else {
             alert("No invited users, select some and try again")
         }
+        router.refresh();
     }
     const inviteActionContent = <button className="btn btn-primary" onClick={() => inviteUsers()}>Invite</button>
     return <>

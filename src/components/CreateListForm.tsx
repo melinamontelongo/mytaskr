@@ -6,6 +6,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
+import { toast } from "react-hot-toast";
 
 interface CreateListFormProps {
     boardId: string,
@@ -13,23 +14,27 @@ interface CreateListFormProps {
 
 const CreateListForm = ({ boardId }: CreateListFormProps) => {
     const router = useRouter();
-    const { handleSubmit, register, formState: { errors } } = useForm<ListCreationFormType>({
+    const { handleSubmit, register, formState: { errors }, reset } = useForm<ListCreationFormType>({
         resolver: zodResolver(ListCreationForm)
-    })
+    });
     const { mutate: createList, isLoading } = useMutation({
         mutationFn: async ({ name, description, boardId }: ListCreationType) => {
             const payload: ListCreationType = { name, description, boardId }
             const { data } = await axios.post("/api/b/create/list", payload)
             return data;
-        },//   TODO: TOASTS
+        },
         onError: (err) => {
-            return console.log(err)
+            return toast.error("Could not create list.")
         },
         onSuccess: () => {
-            console.log("success")
-            router.refresh()
+            toast.success("List created successfully!")
+            reset();
+            //  Close modal
+            const checkModal = document.getElementById("createListModal");
+            checkModal?.click();
+            router.refresh();
         }
-    })
+    });
     return (
         <div className="mx-auto">
             <form onSubmit={handleSubmit((e) => createList({ ...e, boardId }))}>

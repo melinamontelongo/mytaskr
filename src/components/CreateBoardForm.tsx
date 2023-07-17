@@ -5,9 +5,10 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Workspace } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import Link from "next/link";
 
 interface CreateBoardFormProps {
     workspaces?: Workspace[],
@@ -16,14 +17,21 @@ interface CreateBoardFormProps {
 
 const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps) => {
     const router = useRouter();
-    const [selectedWorkspaceID, setSelectedWorkspaceID] = useState<string>("");
-    const { handleSubmit, register, formState: { errors } } = useForm<BoardCreationType>({
+    const { handleSubmit, register, formState: { errors }, reset } = useForm<BoardCreationType>({
         resolver: zodResolver(BoardCreation)
     });
+    const [selectedWorkspaceID, setSelectedWorkspaceID] = useState<string>("");
+    
+    useEffect(() => {
+        if(!workspaces?.length && !createdWorkspaces?.length){
+            toast.error(<div className="flex items-center gap-2">You have no workspaces. <Link className="btn btn-primary" href="/w/create">Create</Link></div>);
+        };
+    }, [workspaces, createdWorkspaces]);
 
     const { mutate: createBoard, isLoading } = useMutation({
         mutationFn: async ({ name, description, workspaceId }: BoardCreationType) => {
             const payload: BoardCreationType = { name, description, workspaceId };
+            setSelectedWorkspaceID(workspaceId);
             const { data } = await axios.post("/api/b/create", payload);
             return data;
         },
@@ -31,7 +39,8 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
             return toast.error("Could not create board.");
         },
         onSuccess: () => {
-            toast.error("Board created successfully!");
+            toast.success("Board created successfully!");
+            reset();
             router.push(`/w/${selectedWorkspaceID}`);
             router.refresh();
         },
@@ -67,9 +76,12 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                             <select
                                 className="select select-bordered w-full max-w-xs"
                                 {...register("workspaceId")}
-                                onChange={(e) => setSelectedWorkspaceID(e.target.value)}
                             >
-                                <option disabled value="">Select a workspace</option>
+                                {!workspaces?.length && !createdWorkspaces?.length ?
+                                    <option disabled value="" defaultValue="">You have no workspaces.</option>
+                                    :
+                                    <option disabled value="" defaultValue="">Select a workspace</option>
+                                }
                                 {workspaces && workspaces?.map((w) => {
                                     return <option value={w.id} key={w.id}>{w.name}</option>
                                 })}
@@ -84,10 +96,10 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                         </div>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary w-full mx-auto">
+                <button type="submit" className="btn btn-primary w-full mx-auto" disabled={!workspaces?.length && !createdWorkspaces?.length}>
                     {isLoading ? <span className="loading loading-spinner"></span>
                         :
-                        "Create new workspace"
+                        "Create new board"
                     }
                 </button>
             </form>

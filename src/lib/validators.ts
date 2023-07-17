@@ -29,7 +29,7 @@ export type WorkspaceCreationFormType = z.infer<typeof WorkspaceCreationForm>
 //  Workspace invite
 export const WorkspaceInvite = z.object({
     invitedUsers: z.string().array(),
-    workspaceId: z.string(),
+    workspaceId: z.string().min(1),
 })
 export type WorkspaceInviteType = z.infer<typeof WorkspaceInvite>
 

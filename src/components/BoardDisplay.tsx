@@ -2,11 +2,12 @@
 import { Board, List, Task } from "@prisma/client";
 import ListContainer from "./ListContainer";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { ListUpdate, ListUpdateType, TaskUpdateType } from "@/lib/validators";
+import { ListUpdateType, TaskUpdateType } from "@/lib/validators";
+import { toast } from "react-hot-toast";
 
 interface OrderedList extends ExtendedList {
     tasksIds: string[]
@@ -26,55 +27,54 @@ interface BoardDisplayProps {
 
 const BoardDisplay = ({ board }: BoardDisplayProps) => {
     const router = useRouter();
-    const [boardInfo, setBoardInfo] = useState(board);
+    const [boardInfo, setBoardInfo] = useState<ExtendedBoard>(board);
 
-    console.log(board)
-    const { mutate: reorderTasks } = useMutation({
+    const { mutate: reorderTasks, isLoading: intraListLoading } = useMutation({
         mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
-            const payload = { taskId, listId, taskIds }
-            const { data } = await axios.patch("/api/b/create/task/", payload)
+            const payload = { taskId, listId, taskIds };
+            const { data } = await axios.patch("/api/b/create/task/", payload);
             return data;
         },//   TODO: TOASTS
         onError: (err) => {
-            return console.log(err)
+            toast.error("Something went wrong!");
+            router.refresh();
         },
         onSuccess: () => {
-            console.log("success")
-            router.refresh()
+            router.refresh();
         }
-    })
+    });
 
-    const { mutate: reorderTasksBetweenLists } = useMutation({
+    const { mutate: reorderTasksBetweenLists, isLoading: interListLoading } = useMutation({
         mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
-            const payload = { taskId, listId, taskIds }
-            const { data } = await axios.put("/api/b/create/task/", payload)
+            const payload = { taskId, listId, taskIds };
+            const { data } = await axios.put("/api/b/create/task/", payload);
             return data;
-        },//   TODO: TOASTS
+        },
         onError: (err) => {
-            return console.log(err)
+            toast.error("Something went wrong!");
+            router.refresh();
         },
         onSuccess: () => {
-            console.log("success")
-            router.refresh()
+            router.refresh();
         }
-    })
+    });
 
-    const { mutate: reorderLists } = useMutation({
+    const { mutate: reorderLists, isLoading: listReorderLoading } = useMutation({
         mutationFn: async ({ listId, listsIds }: ListUpdateType) => {
             const payload = { listId, listsIds }
             const { data } = await axios.patch("/api/b/create/list/", payload)
             return data;
-        },//   TODO: TOASTS
+        },
         onError: (err) => {
-            return console.log(err)
+            toast.error("Something went wrong!");
+            router.refresh();
         },
         onSuccess: () => {
-            console.log("success")
             router.refresh()
         }
-    })
+    });
 
-    const onDragEnd = async (result: any) => {
+    const onDragEndHandler = async (result: any) => {
         const { destination, source, draggableId, type } = result;
 
         if (!destination) return;
@@ -183,7 +183,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             boardListsIds.splice(source.index, 1);
             boardListsIds.splice(destination.index, 0, draggableId);
             //  Modify list index on db
-            reorderLists({listId: draggableId, listsIds: boardListsIds})
+            reorderLists({ listId: draggableId, listsIds: boardListsIds })
 
             //  Update UI
             const listArr: any = [];
@@ -194,19 +194,18 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
                 })
                 return listArr;
             })
-            setBoardInfo({...boardInfo, lists: listArr})
+            setBoardInfo({ ...boardInfo, lists: listArr })
         }
-
-    }
+    };
 
     return (
         <div className="">
-            <DragDropContext onDragEnd={onDragEnd}>
+            <DragDropContext onDragEnd={onDragEndHandler}>
                 <Droppable droppableId="listsDroppable" direction="horizontal" type="list">
                     {provided => (
                         <div className="flex flex-row gap-5"{...provided.droppableProps} ref={provided.innerRef}>
                             {boardInfo.lists.map((list, index) => {
-                                return <ListContainer key={list.id} list={list} index={index} />
+                                return <ListContainer key={list.id} list={list} index={index} isListLoading={listReorderLoading} isTaskLoading={intraListLoading || interListLoading} />
                             })}
                             {provided.placeholder}
                         </div>

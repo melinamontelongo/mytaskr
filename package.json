@@ -21,6 +21,8 @@
     "bcrypt": "^5.1.0",
     "eslint": "8.44.0",
     "eslint-config-next": "13.4.7",
+    "lodash.debounce": "^4.0.8",
+    "natural-drag-animation-rbdnd": "^2.1.0",
     "next": "13.4.7",
     "next-auth": "^4.22.1",
     "next-themes": "^0.2.1",
@@ -38,6 +40,8 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.0",
+    "@types/lodash.debounce": "^4.0.7",
+    "@types/natural-drag-animation-rbdnd": "^2.1.0",
     "@types/react-beautiful-dnd": "^13.1.4",
     "daisyui": "^3.1.7"
   }

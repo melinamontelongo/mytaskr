@@ -31,7 +31,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
     });
 
     if (!workspace) return notFound();
-
+    console.log(workspace)
     return (
         <div className="h-screen max-w-2xl mx-auto flex flex-col gap-5 md:pt-30 pt-36 box-content">
             <div className="flex flex-col sm:flex-row justify-center sm:gap-20 sm:items-center gap-5 px-5">
@@ -56,7 +56,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     <div>Created by {workspace.createdBy.email}</div>
                 </div>
                 <div>
-                    A
+
                 </div>
             </div>
 
@@ -65,7 +65,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
             <div className="flex flex-row items-center justify-between">
                 <h3 className="font-extrabold text-xl">Boards</h3>
                 <div className="w-32">
-                <Link className="btn bg-base-300 normal-case w-full" href="/b/create">Create board</Link>
+                    <Link className="btn bg-base-300 normal-case w-full" href="/b/create">Create board</Link>
                 </div>
             </div>
             <div>
@@ -86,9 +86,12 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
             </div>
             <div>
                 <ul>
-                    {workspace.users.map((user) => {
+                    {workspace.users.length > 0 ? workspace.users.map((user) => {
                         return <li key={user.id}>{user.email}</li>
-                    })}
+                    })
+                        :
+                        <p>No invited users in this workspace.</p>
+                    }
                 </ul>
             </div>
         </div>
