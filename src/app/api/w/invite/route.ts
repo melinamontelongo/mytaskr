@@ -10,24 +10,33 @@ export async function PATCH(req: Request) {
 
         const body = await req.json();
         const { invitedUsers, workspaceId } = WorkspaceInvite.parse(body)
-
+        //  Find workspace
         const workspace = await db.workspace.findFirst({
             where: {
                 id: workspaceId,
             }
         });
         const usersToInvite: string[] = [];
-        //  Filter those who may already be a member (controlled client-side too)
-        workspace?.usersIDs.map((userID) => {
+        //  If workspace already has users
+        if(workspace?.usersIDs && workspace?.usersIDs?.length > 0){
+            //  Filter those who may already be a member (controlled client-side too)
+            workspace?.usersIDs.map((userID) => {
+                invitedUsers.forEach((invitedID) => {
+                    if (userID !== invitedID && userID !== session.user.id) {
+                        usersToInvite.push(userID);
+                    }
+                    return;
+                })
+            }); 
+        } else {
             invitedUsers.forEach((invitedID) => {
-                if (userID !== invitedID && userID !== session.user.id) {
-                    usersToInvite.push(userID);
+                if(invitedID !== session.user.id){
+                    usersToInvite.push(invitedID);
                 }
                 return;
             })
-        });//   come back to test this
-
-        await db.workspace.update({
+        }
+        const updatedWorkspace = await db.workspace.update({
             where: {
                 id: workspaceId,
             },

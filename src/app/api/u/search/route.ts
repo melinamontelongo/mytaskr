@@ -1,5 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { User } from "next-auth";
 
 export async function GET(req: Request) {
     const url = new URL(req.url);
@@ -11,9 +12,10 @@ export async function GET(req: Request) {
     if (!session?.user) return new Response("Unauthorized", { status: 401 });
 
     let foundUsers;
+
     //  Query is being done from an already created workspace
     if (workspaceId) {
-        //  Find user: 
+        //  Find users: 
         foundUsers = await db.user.findMany({
             where: {
                 //a) whose email starts with query
@@ -23,33 +25,32 @@ export async function GET(req: Request) {
                 //b) who are not current user 
                 NOT: {
                     id: session.user.id,
-                },
-                //c) who are not the creators of this workspace
-                createdWorkspaces: {
-                    none: {
-                        id: workspaceId,
-                    }
-                },
-                //d) who are not already members of this workspace 
-                workspaces: {
-                    none: {
-                        users: {
-                            some: {
-                                email: { //fix this bc it will get all users that start with query
-                                    startsWith: userQuery,
-                                }
-                            }
+                    //c) who are not the creators of this workspace
+                    createdWorkspaces: {
+                        some: {
+                            id: workspaceId
                         }
                     }
-                }
+                },
             },
             select: {
                 id: true,
                 email: true,
-/*                 createdWorkspaces: true,
-                workspaces: true, */
             }
         });
+
+        //  Get workspace's users IDs
+        const workspaceUsers = await db.workspace.findFirst({
+            where: {
+                id: workspaceId,
+            },
+            select: {
+                usersIDs: true,
+            },
+        })
+        //  Filter users who are already workspace members
+        foundUsers = foundUsers.filter((user) => !workspaceUsers?.usersIDs.includes(user.id))
+
         //  Query is being done from workspace creation
     } else {
         //  Find user: 
@@ -67,11 +68,8 @@ export async function GET(req: Request) {
             select: {
                 id: true,
                 email: true,
-/*                 createdWorkspaces: true,
-                workspaces: true, */
             }
         });
     }
-
     return new Response(JSON.stringify(foundUsers));
 }
