@@ -2,7 +2,33 @@
 @tailwind components;
 @tailwind utilities;
 
-.notification{
-background: hsl(var(--b2))!important;
-color: hsl(var(--bc))!important;
+.notification {
+    background: hsl(var(--b2)) !important;
+    color: hsl(var(--bc)) !important;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+    background: hsl(var(--b3));
+    box-shadow: inset 0 0 2px hsl(var(--bc));
+    border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--b1));
+    box-shadow: inset 0 0 2px hsl(var(--bc));
+    border-radius: 10px;
+
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: hsl(var(--bc));
+/*     box-shadow: inset 0 0 10px hsl(var(--bc)); */
 }

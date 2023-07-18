@@ -31,10 +31,8 @@ const BoardPage = async ({ params }: BoardPageProps) => {
     })
     if (!board) return notFound();
     return (
-        <div className="h-screen max-w-4xl mx-auto flex flex-col gap-5 md:pt-30 pt-36 box-content">
-            <h1 className="font-extrabold text-xl">{board.name}</h1>
-            <CreateListBtnModal boardId={params.id} />
-            <div className="overflow-x-auto overflow-y-hidden">
+        <div className="max-h-screen mx-auto flex flex-col gap-5 md:pt-24 pt-24 box-content">
+            <div className="overflow-x-auto overflow-y-hidden max-h-screen h-[calc(100vh-11rem)]">
                 <div className="flex flex-col">
                     <BoardDisplay board={board} />
                 </div>
