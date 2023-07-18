@@ -203,7 +203,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             <DragDropContext onDragEnd={onDragEndHandler}>
                 <Droppable droppableId="listsDroppable" direction="horizontal" type="list">
                     {provided => (
-                        <div className="flex flex-row gap-5"{...provided.droppableProps} ref={provided.innerRef}>
+                        <div className="flex flex-row gap-5 pb-2"{...provided.droppableProps} ref={provided.innerRef}>
                             {boardInfo.lists.map((list, index) => {
                                 return <ListContainer key={list.id} list={list} index={index} isListLoading={listReorderLoading} isTaskLoading={intraListLoading || interListLoading} />
                             })}
