@@ -8,12 +8,11 @@ import CreateDropdown from "./CreateDropdown";
 const Navbar = async () => {
     const session = await getAuthSession();
     return (
-        <div className="navbar bg-base-100 shadow-lg h-15 fixed top-0 left-0 right-0 z-50">
+        <div className="navbar bg-base-100 shadow-lg h-14 fixed top-0 left-0 right-0 z-50">
             <div className="flex-1">
                 <Link href="/" className="btn btn-ghost normal-case text-xl font-extrabold sm:text-2xl drop-shadow-md">mytaskr.</Link>
                 {session && (<>
                     <WorkspacesDropdown userId={session.user.id} />
-                   {/*  <Link href="/my/bookmarks" className="btn btn-ghost normal-case text-sm font-medium">Bookmarks</Link> */}
                     <CreateDropdown />
                 </>)}
             </div>

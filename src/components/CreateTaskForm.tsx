@@ -41,8 +41,8 @@ const CreateTaskForm = ({ listId }: CreateListFormProps) => {
                     <div className="flex flex-col gap-5 w-full">
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Name</label>
-                            <input type="text" className="input input-bordered" {...register("name")} />
-                            {errors.name && <p className="text-error text-sm">Invalid list name</p>}
+                            <input type="text" className={`input input-bordered rounded ${errors.name && "border-error"}`} {...register("name")} />
+                            {errors.name && <p className="text-error text-xs my-2">The name of the task is required.</p>}
                             <label className="label">
                                 <span className="label-text-alt">This is the name of the new task.</span>
                             </label>
@@ -50,15 +50,15 @@ const CreateTaskForm = ({ listId }: CreateListFormProps) => {
 
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Description</label>
-                            <textarea className="textarea textarea-bordered"  {...register("description")} />
-                            {errors.name && <p className="text-error text-sm">Invalid description</p>}
+                            <textarea className={`textarea textarea-bordered rounded ${errors.description && "border-error"}`}  {...register("description")} />
+                            {errors.description && <p className="text-error text-xs my-2">Invalid description</p>}
                             <label className="label">
                                 <span className="label-text-alt">Describe this task.</span>
                             </label>
                         </div>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary w-full mx-auto">
+                <button type="submit" className="btn normal-case bg-base-300 w-full rounded mx-auto">
                     {isLoading ? <span className="loading loading-spinner"></span>
                         :
                         "Create task"

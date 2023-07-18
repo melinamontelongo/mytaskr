@@ -20,19 +20,18 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading }: ListContai
         <Draggable draggableId={list.id} index={index} isDragDisabled={isListLoading}>
             {provided => ( 
                 <div 
-                {...provided.dragHandleProps}
                 {...provided.draggableProps} 
                 ref={provided.innerRef} 
-                className="bg-base-300 w-64 h-[30rem] shadow-xl">
-                    <div className="py-2 px-4">
+                className="bg-base-300 w-64 h-fit shadow-xl rounded">
+                    <div className="py-2 px-4" {...provided.dragHandleProps}>
                         <h3 className="font-bold text-xl">{list.name}</h3>
                     </div>
-                    <div className="overflow-y-auto w-64 h-96">
-                        <div className="px-2 pb-2 h-[22rem]">
-                            <div className="h-full">
+                    <div className="overflow-y-auto w-64 min-h-[3rem] max-h-[calc(100vh-20rem)]">
+                        <div className="px-2 min-h-[3rem] max-h-[calc(100vh-20rem)]">
+                            <div className="min-h-[3rem] max-h-[calc(100vh-20rem)]">
                                 <Droppable droppableId={list.id} type="task">
                                     {provided => (
-                                        <div className="h-full"
+                                        <div className="min-h-[3rem] max-h-[calc(100vh-20rem)]"
                                             ref={provided.innerRef}
                                             {...provided.droppableProps}>
                                             {list.tasks.map((task, index) => {
@@ -46,7 +45,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading }: ListContai
                         </div>
                     </div>
                     {/* FOOTER */}
-                    <div className="py-2 px-4">
+                    <div className="p-2">
                         <CreateTaskBtnModal listId={list.id} />
                     </div>
                 </div>
