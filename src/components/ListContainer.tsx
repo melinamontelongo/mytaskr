@@ -25,6 +25,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading }: ListContai
                 className="bg-base-300 w-64 h-fit shadow-xl rounded">
                     <div className="py-2 px-4" {...provided.dragHandleProps}>
                         <h3 className="font-bold text-xl">{list.name}</h3>
+                        {/* TODO: EDIT AND DELETE LIST */}
                     </div>
                     <div className="overflow-y-auto w-64 min-h-[3rem] max-h-[calc(100vh-20rem)]">
                         <div className="px-2 min-h-[3rem] max-h-[calc(100vh-20rem)]">

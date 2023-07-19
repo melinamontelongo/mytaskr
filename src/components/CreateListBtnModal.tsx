@@ -1,3 +1,4 @@
+import { IoMdAdd } from "react-icons/io";
 import CreateListForm from "./CreateListForm";
 
 interface CreateListBtnModalProps {
@@ -7,7 +8,10 @@ interface CreateListBtnModalProps {
 const CreateListBtnModal = ({ boardId }: CreateListBtnModalProps) => {
     return (<>
         {/* BTN */}
-        <label htmlFor="createListModal" className="btn bg-base-300 normal-case w-fit">Add list</label>
+        <label htmlFor="createListModal" className="btn bg-base-300 normal-case w-fit rounded">
+            <IoMdAdd className="text-base-content text-xl" />
+            Add list
+        </label>
 
         {/* MODAL */}
         <input type="checkbox" id="createListModal" className="modal-toggle" />

@@ -26,7 +26,10 @@ const ListItem = ({ task, index, isTaskLoading }: ListItemProps) => {
                             {...provided.dragHandleProps}
                             className={`w-full bg-base-100 min-h-16 px-4 py-2 my-2 shadow-xl transition-all rounded`}
                             style={style}>
-                            <p className="break-all">{task.name}</p>
+                            <div className="">
+                                <p className="break-all">{task.name}</p>
+                                {/* TODO: EDIT AND DELETE TASK */}
+                            </div>
                         </div>
                     )}
                 </NaturalDragAnimation>

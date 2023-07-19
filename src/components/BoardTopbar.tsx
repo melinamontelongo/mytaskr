@@ -19,8 +19,8 @@ const BoardTopbar = async ({ boardId }: BoardTopbarProps) => {
     if (!board) return notFound();
 
     return (
-        <div className="fixed top-0 left-0 right-0 h-32 bg-base-100">
-            <div className="flex md:flex-row justify-evenly items-center h-full my-8">
+        <div className="fixed top-0 left-0 right-0 h-32 ">
+            <div className="flex md:flex-row justify-evenly items-center h-full my-8 md:pl-48">
                 <div className="py-2">
                     <h1 className="font-extrabold text-xl">{board.name}</h1>
                     {board.description && <p>{board.description}</p>}

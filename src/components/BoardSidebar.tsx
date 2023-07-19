@@ -31,7 +31,7 @@ const BoardSidebar = async ({ boardId }: BoardSidebarProps) => {
     if(!workspace) return null;
     return (<>
         {/* bigger screens */}
-        <div className="fixed top-0 bottom-0 left-0 w-44 bg-base-100 md:flex hidden items-center justify-center ">
+        <div className="fixed top-0 bottom-0 left-0 w-44 bg-base-100 md:flex hidden items-center justify-center shadow-lg">
             <div className="flex flex-col">
                 <Link href={`/w/${workspace.id}`} className="text-left font-bold text-xl">
                     {workspace.name}

@@ -16,8 +16,8 @@ export default function ThemeToggler() {
     }
     return (
         <>
-            <button className={`btn btn-ghost ${resolvedTheme === "dark" && "hidden"}`} onClick={() => setTheme('dark')}><BsFillSunFill /></button>
-            <button className={`btn btn-ghost ${resolvedTheme === "light" && "hidden"}`} onClick={() => setTheme('light')}><BsFillMoonFill /></button>
+            <button aria-label="change theme to dark" className={`btn btn-ghost rounded ${resolvedTheme === "dark" && "hidden"}`} onClick={() => setTheme('dark')}><BsFillSunFill /></button>
+            <button aria-label="change theme to light" className={`btn btn-ghost rounded ${resolvedTheme === "light" && "hidden"}`} onClick={() => setTheme('light')}><BsFillMoonFill /></button>
         </>
     )
 }

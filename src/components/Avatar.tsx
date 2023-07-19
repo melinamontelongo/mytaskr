@@ -1,11 +1,11 @@
-import { User } from "next-auth";
 import Image from "next/image";
 
 interface AvatarProps {
-    userImg: string | null | undefined
+    userImg: string | null | undefined,
+    userName: string,
 }
 
-const Avatar = ({ userImg }: AvatarProps) => {
+const Avatar = ({ userImg, userName }: AvatarProps) => {
 
     return (<>
         {userImg ?
@@ -17,7 +17,7 @@ const Avatar = ({ userImg }: AvatarProps) => {
             :
             <div className="avatar placeholder">
                 <div className="rounded-full w-10 bg-neutral-focus text-neutral-content">
-                    <span className="text-3xl">K</span>
+                    <span className="text-3xl">{userName[0]}</span>
                 </div>
             </div>
         }

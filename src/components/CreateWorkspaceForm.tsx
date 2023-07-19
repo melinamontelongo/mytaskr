@@ -62,13 +62,13 @@ const CreateWorkspaceForm = () => {
     };
 
     return (
-        <div className="mx-auto">
+        <div className="mx-auto px-5 pb-8">
             <form onSubmit={handleSubmit(handleData)}>
                 <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
                     <div className="flex flex-col gap-5 w-full">
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Name</label>
-                            <input type="text" className="input input-bordered" {...register("name")} />
+                            <input type="text" className={`input input-bordered rounded ${errors.name && "border-error"}`} {...register("name")} />
                             {errors.name && <p className="text-error text-sm">Invalid workspace name</p>}
                             <label className="label">
                                 <span className="label-text-alt">This can be the name of your project, team, organization or company.</span>
@@ -77,7 +77,7 @@ const CreateWorkspaceForm = () => {
 
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Description</label>
-                            <textarea className="textarea textarea-bordered"  {...register("description")} />
+                            <textarea className={`textarea textarea-bordered rounded ${errors.description && "border-error"}`} {...register("description")} />
                             {errors.description && <p className="text-error text-sm">Invalid description</p>}
                             <label className="label">
                                 <span className="label-text-alt">Describe the purpose of this workspace.</span>
@@ -122,7 +122,7 @@ const CreateWorkspaceForm = () => {
                     </div>
                 </div>
 
-                <button type="submit" className="btn btn-primary w-full mx-auto">
+                <button type="submit" className="btn btn-primary text-lg normal-case w-full mx-auto rounded">
                     {isLoading ? <span className="loading loading-spinner"></span>
                         :
                         "Create new workspace"

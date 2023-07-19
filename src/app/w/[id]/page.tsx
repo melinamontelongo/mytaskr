@@ -1,3 +1,5 @@
+import Avatar from "@/components/Avatar";
+import DisplayCard from "@/components/DisplayCard";
 import InviteToWorkspace from "@/components/InviteToWorkspace";
 import { db } from "@/lib/db";
 import Link from "next/link";
@@ -25,6 +27,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     email: true,
                     name: true,
                     username: true,
+                    image: true,
                 }
             }
         }
@@ -53,7 +56,6 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                         </>
                     }
                     </div>
-                    <div>Created by {workspace.createdBy.email}</div>
                 </div>
                 <div>
 
@@ -65,17 +67,15 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
             <div className="flex flex-row items-center justify-between">
                 <h3 className="font-extrabold text-xl">Boards</h3>
                 <div className="w-32">
-                    <Link className="btn bg-base-300 normal-case w-full" href="/b/create">Create board</Link>
+                    <Link className="btn bg-base-300 normal-case w-full rounded" href="/b/create">Create board</Link>
                 </div>
             </div>
-            <div>
-                <ul>
-                    {workspace.boards.length > 0 ? workspace.boards.map((board) => {
-                        return <li><Link href={`/b/${board.id}`} key={board.id}>{board.name}</Link></li>
-                    }) :
-                        <p>No boards in this workspace.</p>
-                    }
-                </ul>
+            <div className="flex md:flex-row flex-col md:flex-wrap gap-4 my-4">
+                {workspace.boards.length > 0 ? workspace.boards.map((board) => {
+                    return <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} />
+                }) :
+                    <p>No boards in this workspace.</p>
+                }
             </div>
             {/* MEMBERS */}
             <div className="flex flex-row items-center justify-between">
@@ -84,15 +84,24 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     <InviteToWorkspace workspaceId={params.id} />
                 </div>
             </div>
-            <div>
-                <ul>
-                    {workspace.users.length > 0 ? workspace.users.map((user) => {
-                        return <li key={user.id}>{user.email}</li>
-                    })
-                        :
-                        <p>No invited users in this workspace.</p>
-                    }
-                </ul>
+            <div className="flex md:flex-row flex-col md:flex-wrap gap-10 my-4">
+
+                <div className="flex items-center gap-2">
+                    <Avatar userImg={workspace.createdBy.image} userName={workspace.createdBy.name || workspace.createdBy.email!} />
+                    <span>{workspace.createdBy.name ?? workspace.createdBy.email} (Author)</span>
+                </div>
+                
+                {workspace.users.length > 0 ? workspace.users.map((user) => {
+                    return (
+                        <div key={user.id} className="flex items-center gap-2">
+                            <Avatar userImg={user.image} userName={user.name || user.email!} />
+                            {user.email}
+                        </div>
+                    )
+                })
+                    :
+                    <p>No invited users in this workspace.</p>
+                }
             </div>
         </div>
     )

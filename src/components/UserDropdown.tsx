@@ -10,9 +10,9 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
 
     return (
         <>
-            <div className="dropdown dropdown-end">
-                <label tabIndex={0} className="">
-                    <Avatar userImg={user.image} />
+            <div className="dropdown dropdown-end" aria-label="user options" role="menu">
+                <label tabIndex={0} className="cursor-pointer">
+                    <Avatar userImg={user.image} userName={user.name || user.email!} />
                 </label>
                 <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-fit">
                     {/* ACCOUNT INFO */}
@@ -20,24 +20,24 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
                         <p className="uppercase font-medium text-xs">Account</p>
                     </div>
                     <div className="flex items-center justify-start gap-2">
-                        <Avatar userImg={user.image} />
+                        <Avatar userImg={user.image} userName={user.name || user.email!} />
                         <div className="flex flex-col  ">
                             {user.name && <p className="font-bold">{user.name}</p>}
                             {user.email && <p className="text-neutral-500 w-40 truncate">{user.email}</p>}
                         </div>
-                    
+
                     </div>
                     <div className="divider my-1"></div>
                     {/* LINKS */}
                     <div className="flex flex-col gap-2">
 
-                    <li><a>Profile</a></li>
-                    
-                    <li><a>Settings</a></li>
+                        <li role="menuitem"><a>Profile</a></li>
 
-                    <li><a>Activity</a></li>
+                        <li role="menuitem"><a>Settings</a></li>
 
-                    <li><SignOutButton /></li>
+                        <li role="menuitem"><a>Activity</a></li>
+
+                        <li role="menuitem"><SignOutButton /></li>
                     </div>
                 </ul>
             </div>

@@ -53,8 +53,8 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                     <div className="flex flex-col gap-5 w-full">
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Name</label>
-                            <input type="text" className="input input-bordered" {...register("name")} />
-                            {errors.name && <p className="text-error text-sm">Invalid board name</p>}
+                            <input type="text" className={`input input-bordered rounded ${errors.name && "border-error"}`} {...register("name")} />
+                            {errors.name && <p className="text-error text-xs my-2">Invalid board name</p>}
                             <label className="label">
                                 <span className="label-text-alt">This is the name of your new board.</span>
                             </label>
@@ -62,8 +62,8 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
 
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Description</label>
-                            <textarea className="textarea textarea-bordered"  {...register("description")} />
-                            {errors.description && <p className="text-error text-sm">Invalid description</p>}
+                            <textarea className={`textarea textarea-bordered rounded ${errors.description && "border-error"}`} {...register("description")} />
+                            {errors.description && <p className="text-error text-xs my-2">Invalid description</p>}
                             <label className="label">
                                 <span className="label-text-alt">Describe the purpose of this board.</span>
                             </label>
@@ -74,7 +74,7 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Workspace</label>
                             <select
-                                className="select select-bordered w-full max-w-xs"
+                                className="select select-bordered w-full max-w-xs rounded"
                                 {...register("workspaceId")}
                             >
                                 {!workspaces?.length && !createdWorkspaces?.length ?
@@ -89,14 +89,14 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                                     return <option value={w.id} key={w.id}>{w.name}</option>
                                 })}
                             </select>
-                            {errors.workspaceId && <p className="text-error text-sm">Please select a workspace.</p>}
+                            {errors.workspaceId && <p className="text-error text-xs my-2">Please select a workspace.</p>}
                             <label className="label">
                                 <span className="label-text-alt">This is where your board will belong to.</span>
                             </label>
                         </div>
                     </div>
                 </div>
-                <button type="submit" className="btn btn-primary w-full mx-auto" disabled={!workspaces?.length && !createdWorkspaces?.length}>
+                <button type="submit" className="btn btn-primary text-lg normal-case w-full mx-auto rounded" disabled={!workspaces?.length && !createdWorkspaces?.length}>
                     {isLoading ? <span className="loading loading-spinner"></span>
                         :
                         "Create new board"

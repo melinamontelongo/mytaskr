@@ -36,7 +36,7 @@ const SearchUsers = ({ inviteUserFn, invitedUsersIDs, workspaceID }: SearchUsers
     return (<>
         <input
             type="text"
-            className="input input-bordered"
+            className="input input-bordered rounded"
             value={input}
             onInput={(e: any) => {
                 setInput(e.target.value)
