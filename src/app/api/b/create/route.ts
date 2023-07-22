@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { BoardCreation } from "@/lib/validators";
 import {z} from "zod";
 
+//  Create board
 export async function POST(req: Request) {
     try {
         const session = await getAuthSession();

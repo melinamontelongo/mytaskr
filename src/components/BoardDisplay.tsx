@@ -2,12 +2,14 @@
 import { Board, List, Task } from "@prisma/client";
 import ListContainer from "./ListContainer";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { ListUpdateType, TaskUpdateType } from "@/lib/validators";
+import { ListOrderUpdateType, TaskUpdateType } from "@/lib/validators";
 import { toast } from "react-hot-toast";
+import DeleteListModal from "./DeleteListModal";
+import UpdateListModal from "./UpdateListModal";
 
 interface OrderedList extends ExtendedList {
     tasksIds: string[]
@@ -28,7 +30,8 @@ interface BoardDisplayProps {
 const BoardDisplay = ({ board }: BoardDisplayProps) => {
     const router = useRouter();
     const [boardInfo, setBoardInfo] = useState<ExtendedBoard>(board);
-
+    const [currentDeleteList, setCurrentDeleteList] = useState<List>();
+    const [currentUpdateList, setCurrentUpdateList] = useState<List>();
     const { mutate: reorderTasks, isLoading: intraListLoading } = useMutation({
         mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
             const payload = { taskId, listId, taskIds };
@@ -60,9 +63,9 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
     });
 
     const { mutate: reorderLists, isLoading: listReorderLoading } = useMutation({
-        mutationFn: async ({ listId, listsIds }: ListUpdateType) => {
+        mutationFn: async ({ listId, listsIds }: ListOrderUpdateType) => {
             const payload = { listId, listsIds }
-            const { data } = await axios.patch("/api/b/create/list/", payload)
+            const { data } = await axios.patch("/api/b/update/list/", payload)
             return data;
         },
         onError: (err) => {
@@ -198,14 +201,22 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
         }
     };
 
-    return (
+    return (<>
         <div className="">
             <DragDropContext onDragEnd={onDragEndHandler}>
                 <Droppable droppableId="listsDroppable" direction="horizontal" type="list">
                     {provided => (
                         <div className="flex flex-row gap-5 pb-2"{...provided.droppableProps} ref={provided.innerRef}>
                             {boardInfo.lists.map((list, index) => {
-                                return <ListContainer key={list.id} list={list} index={index} isListLoading={listReorderLoading} isTaskLoading={intraListLoading || interListLoading} />
+                                return <ListContainer
+                                    key={list.id}
+                                    list={list}
+                                    index={index}
+                                    isListLoading={listReorderLoading}
+                                    isTaskLoading={intraListLoading || interListLoading}
+                                    setDeleteList={setCurrentDeleteList}
+                                    setUpdateList={setCurrentUpdateList}
+                                />
                             })}
                             {provided.placeholder}
                         </div>
@@ -213,6 +224,10 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
                 </Droppable>
             </DragDropContext>
         </div>
+
+        {currentDeleteList && <DeleteListModal listId={currentDeleteList?.id} listName={currentDeleteList?.name}/>}
+        {currentUpdateList && <UpdateListModal listId={currentUpdateList?.id} listName={currentUpdateList?.name} listDescription={currentUpdateList?.description}/>}
+    </>
     )
 }
 
