@@ -3,7 +3,7 @@ import { List, Task } from "@prisma/client";
 import ListItem from "./ListItem";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import CreateTaskBtnModal from "./CreateTaskBtnModal";
-import { BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 
 interface ExtendedList extends List {
@@ -16,9 +16,10 @@ interface ListContainerProps {
     isTaskLoading: boolean,
     setDeleteList: Function,
     setUpdateList: Function,
+    setCurrentTask: Function,
 }
 
-const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteList, setUpdateList }: ListContainerProps) => {
+const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteList, setUpdateList, setCurrentTask }: ListContainerProps) => {
 
     const showDeleteModal = () => {
         setDeleteList(list);   
@@ -38,7 +39,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
 
 
                         <details className="dropdown" role="menu">
-                            <summary className="m-1 btn btn-ghost rounded"><BsThreeDotsVertical /></summary>
+                            <summary className="m-1 btn btn-sm btn-ghost rounded"><BsThreeDots /></summary>
                             <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
                                 <li role="menuitem">
                                     <label htmlFor={"updateListModal"} className="" onClick={() => showUpdateModal()}>
@@ -63,7 +64,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
                                             ref={provided.innerRef}
                                             {...provided.droppableProps}>
                                             {list.tasks.map((task, index) => {
-                                                return <ListItem key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} />
+                                                return <ListItem key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} setCurrentTask={setCurrentTask}/>
                                             })}
                                             {provided.placeholder}
                                         </div>

@@ -49,7 +49,7 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
             <div className="modal" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
                 <div className="modal-box">
                     <label htmlFor={`updateListModal`} aria-label="close" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">X</label>
-                    <h3 className="font-bold text-lg text-center" id="modalTitle">Edit "{listName}" List</h3>
+                    <h3 className="font-bold text-2xl text-center" id="modalTitle">Edit "{listName}" List</h3>
                     <form onSubmit={handleSubmit((e) => updateList({...e, listId}))}>
                         <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
                             <div className="flex flex-col gap-5 w-full">

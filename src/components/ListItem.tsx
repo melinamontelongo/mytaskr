@@ -2,16 +2,20 @@
 import { Task } from "@prisma/client"
 import { Draggable } from "react-beautiful-dnd";
 import NaturalDragAnimation from 'natural-drag-animation-rbdnd';
+import { AiFillEdit } from "react-icons/ai";
 
 interface ListItemProps {
     task: Task,
     index: number,
     isTaskLoading: boolean,
+    setCurrentTask: Function,
 }
 
 
-const ListItem = ({ task, index, isTaskLoading }: ListItemProps) => {
-
+const ListItem = ({ task, index, isTaskLoading, setCurrentTask }: ListItemProps) => {
+    const showTaskModal = () => {
+        setCurrentTask(task)
+    }
     return (<>
         <Draggable draggableId={task.id} index={index} isDragDisabled={isTaskLoading}>
             {(provided, snapshot) => (
@@ -24,11 +28,13 @@ const ListItem = ({ task, index, isTaskLoading }: ListItemProps) => {
                             ref={provided.innerRef}
                             {...provided.draggableProps}
                             {...provided.dragHandleProps}
-                            className={`w-full bg-base-100 min-h-16 px-4 py-2 my-2 shadow-xl transition-all rounded`}
+                            className={`group w-full bg-base-100 min-h-16 px-4 py-2 my-2 shadow-xl transition-all rounded`}
                             style={style}>
-                            <div className="">
+                            <div className="flex justify-between items-center" >
                                 <p className="break-all">{task.name}</p>
-                                {/* TODO: EDIT AND DELETE TASK */}
+                                <label htmlFor={`taskModal`} className="btn btn-sm btn-ghost rounded invisible group-hover:visible" onClick={() => setCurrentTask(task)}>
+                                    <AiFillEdit />
+                                </label>
                             </div>
                         </div>
                     )}

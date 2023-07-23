@@ -98,11 +98,6 @@ export async function DELETE(req: Request) {
         })
         return new Response("List deleted successfully!");
     } catch (e) {
-        console.log(e)
-        if (e instanceof z.ZodError) {
-            //  Wrong data was sent
-            return new Response("Invalid request data passed.", { status: 422 })
-        }
         return new Response("Could not reorder tasks, please try again later.", { status: 500 })
     }
 }

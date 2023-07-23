@@ -81,7 +81,9 @@ export const ListOrderUpdate = z.object({
     listsIds: z.string().array(),
 })
 export type ListOrderUpdateType = z.infer<typeof ListOrderUpdate>
+
 /************ TASK ************/
+//  Create task
 export const TaskCreation = z.object({
     name: z.string().min(3).max(32),
     description: z.string().max(150).optional(),
@@ -96,9 +98,17 @@ export const TaskCreationForm = z.object({
 export type TaskCreationFormType = z.infer<typeof TaskCreationForm>
 
 //  Task order update 
-export const TaskUpdate = z.object({
+export const TaskOrderUpdate = z.object({
     listId: z.string(),
     taskId: z.string(),
     taskIds: z.string().array(),
+})
+export type TaskOrderUpdateType = z.infer<typeof TaskOrderUpdate>
+
+//  Task update
+export const TaskUpdate = z.object({
+    name: z.string().min(3).max(32),
+    description: z.string().max(150).optional(),
+    taskId: z.string(),
 })
 export type TaskUpdateType = z.infer<typeof TaskUpdate>

@@ -6,10 +6,11 @@ import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { ListOrderUpdateType, TaskUpdateType } from "@/lib/validators";
+import { ListOrderUpdateType, TaskOrderUpdateType } from "@/lib/validators";
 import { toast } from "react-hot-toast";
 import DeleteListModal from "./DeleteListModal";
 import UpdateListModal from "./UpdateListModal";
+import TaskModal from "./TaskModal";
 
 interface OrderedList extends ExtendedList {
     tasksIds: string[]
@@ -32,8 +33,10 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
     const [boardInfo, setBoardInfo] = useState<ExtendedBoard>(board);
     const [currentDeleteList, setCurrentDeleteList] = useState<List>();
     const [currentUpdateList, setCurrentUpdateList] = useState<List>();
+    const [currentTask, setCurrentTask] = useState<Task>();
+
     const { mutate: reorderTasks, isLoading: intraListLoading } = useMutation({
-        mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
+        mutationFn: async ({ taskId, listId, taskIds }: TaskOrderUpdateType) => {
             const payload = { taskId, listId, taskIds };
             const { data } = await axios.patch("/api/b/create/task/", payload);
             return data;
@@ -48,7 +51,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
     });
 
     const { mutate: reorderTasksBetweenLists, isLoading: interListLoading } = useMutation({
-        mutationFn: async ({ taskId, listId, taskIds }: TaskUpdateType) => {
+        mutationFn: async ({ taskId, listId, taskIds }: TaskOrderUpdateType) => {
             const payload = { taskId, listId, taskIds };
             const { data } = await axios.put("/api/b/create/task/", payload);
             return data;
@@ -216,6 +219,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
                                     isTaskLoading={intraListLoading || interListLoading}
                                     setDeleteList={setCurrentDeleteList}
                                     setUpdateList={setCurrentUpdateList}
+                                    setCurrentTask={setCurrentTask}
                                 />
                             })}
                             {provided.placeholder}
@@ -225,8 +229,9 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             </DragDropContext>
         </div>
 
-        {currentDeleteList && <DeleteListModal listId={currentDeleteList?.id} listName={currentDeleteList?.name}/>}
-        {currentUpdateList && <UpdateListModal listId={currentUpdateList?.id} listName={currentUpdateList?.name} listDescription={currentUpdateList?.description}/>}
+        {currentDeleteList && <DeleteListModal listId={currentDeleteList?.id} listName={currentDeleteList?.name} />}
+        {currentUpdateList && <UpdateListModal listId={currentUpdateList?.id} listName={currentUpdateList?.name} listDescription={currentUpdateList?.description} />}
+        {currentTask && <TaskModal task={currentTask} listName={board.lists.filter(list => list.id === currentTask.listId)[0].name} />}
     </>
     )
 }
