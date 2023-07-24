@@ -25,12 +25,6 @@ export async function GET(req: Request) {
                 //b) who are not current user 
                 NOT: {
                     id: session.user.id,
-                    //c) who are not the creators of this workspace
-                    createdWorkspaces: {
-                        some: {
-                            id: workspaceId
-                        }
-                    }
                 },
             },
             select: {
@@ -39,18 +33,23 @@ export async function GET(req: Request) {
             }
         });
 
-        //  Get workspace's users IDs
+        //  Get workspace's users IDs and creator's id
         const workspaceUsers = await db.workspace.findFirst({
             where: {
                 id: workspaceId,
             },
             select: {
                 usersIDs: true,
+                createdBy: {
+                    select: {
+                        id: true,
+                    }
+                },
             },
         })
-        //  Filter users who are already workspace members
-        foundUsers = foundUsers.filter((user) => !workspaceUsers?.usersIDs.includes(user.id))
-
+        //  Filter users who are already workspace members or have created the workspace
+        foundUsers = foundUsers.filter((user) => !workspaceUsers?.usersIDs.includes(user.id) && !(workspaceUsers?.createdBy.id === user.id))
+        
         //  Query is being done from workspace creation
     } else {
         //  Find user: 
