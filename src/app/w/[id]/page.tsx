@@ -1,6 +1,6 @@
 import Avatar from "@/components/ui/Avatar";
 import DisplayCard from "@/components/ui/DisplayCard";
-import InviteToWorkspace from "@/components/InviteToWorkspace";
+import InviteToWorkspace from "@/components/users/InviteToWorkspace";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";

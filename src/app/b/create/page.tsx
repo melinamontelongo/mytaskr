@@ -1,5 +1,4 @@
-import CreateBoardForm from "@/components/CreateBoardForm";
-import CreateWorkspaceForm from "@/components/CreateWorkspaceForm";
+import CreateBoardForm from "@/components/create/CreateBoardForm";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 

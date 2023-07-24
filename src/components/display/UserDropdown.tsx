@@ -1,8 +1,8 @@
 "use client"
 import { User } from "next-auth";
-import Avatar from "./ui/Avatar";
-import SignOutButton from "./auth/SignOutButton";
-import Dropdown from "./ui/Dropdown";
+import Avatar from "../ui/Avatar";
+import SignOutButton from "../auth/SignOutButton";
+import Dropdown from "../ui/Dropdown";
 
 interface UserDropdownProps {
     user: Pick<User, "name" | "email" | "image">

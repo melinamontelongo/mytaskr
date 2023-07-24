@@ -2,7 +2,7 @@ import Link from "next/link"
 import { BsPersonWorkspace } from "react-icons/bs";
 import { IoMdAdd } from "react-icons/io";
 import { RiTableFill } from "react-icons/ri";
-import Dropdown from "./ui/Dropdown";
+import Dropdown from "../ui/Dropdown";
 
 const CreateDropdown = () => {
     return (

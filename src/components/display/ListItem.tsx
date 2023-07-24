@@ -13,9 +13,6 @@ interface ListItemProps {
 
 
 const ListItem = ({ task, index, isTaskLoading, setCurrentTask }: ListItemProps) => {
-    const showTaskModal = () => {
-        setCurrentTask(task)
-    }
     return (<>
         <Draggable draggableId={task.id} index={index} isDragDisabled={isTaskLoading}>
             {(provided, snapshot) => (

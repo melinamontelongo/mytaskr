@@ -1,14 +1,14 @@
 import Link from "next/link";
-import ThemeToggler from "./ThemeToggler";
+import ThemeToggler from "../ui/ThemeToggler";
 import { getAuthSession } from "@/lib/auth";
-import UserDropdown from "./UserDropdown";
-import WorkspacesDropdown from "./WorkspacesDropdown";
-import CreateDropdown from "./CreateDropdown";
+import UserDropdown from "../display/UserDropdown";
+import WorkspacesDropdown from "../display/WorkspacesDropdown";
+import CreateDropdown from "../create/CreateDropdown";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiFillHome } from "react-icons/ai";
 import { RiTableFill } from "react-icons/ri";
 import { BsPersonWorkspace } from "react-icons/bs";
-import Dropdown from "./ui/Dropdown";
+import Dropdown from "../ui/Dropdown";
 
 const Navbar = async () => {
     const session = await getAuthSession();

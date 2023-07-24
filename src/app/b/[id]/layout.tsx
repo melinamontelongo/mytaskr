@@ -1,6 +1,6 @@
-import BoardSidebar from "@/components/BoardSidebar";
-import BoardTopbar from "@/components/BoardTopbar";
-import CreateListBtnModal from "@/components/CreateListBtnModal";
+import BoardSidebar from "@/components/display/BoardSidebar";
+import BoardTopbar from "@/components/display/BoardTopbar";
+import CreateListBtnModal from "@/components/create/CreateListBtnModal";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 

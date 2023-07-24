@@ -2,7 +2,7 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import { BiChevronDown } from "react-icons/bi"
 import { BsPersonWorkspace } from "react-icons/bs";
-import Dropdown from "./ui/Dropdown";
+import Dropdown from "../ui/Dropdown";
 
 interface WorkspaceDropdown {
     userId: string,

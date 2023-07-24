@@ -2,7 +2,7 @@ import './globals.css'
 import { Inter } from 'next/font/google'
 import { Toaster } from "react-hot-toast";
 import Providers from './providers'
-import Navbar from '@/components/Navbar'
+import Navbar from '@/components/navigation/Navbar'
 
 const inter = Inter({ subsets: ['latin'] })
 

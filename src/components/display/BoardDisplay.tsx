@@ -8,9 +8,9 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ListOrderUpdateType, TaskOrderUpdateType } from "@/lib/validators";
 import { toast } from "react-hot-toast";
-import DeleteListModal from "./DeleteListModal";
-import UpdateListModal from "./UpdateListModal";
-import TaskModal from "./TaskModal";
+import DeleteListModal from "../delete/DeleteListModal";
+import UpdateListModal from "../update/UpdateListModal";
+import TaskModal from "../update/TaskModal";
 
 interface OrderedList extends ExtendedList {
     tasksIds: string[]

@@ -1,4 +1,4 @@
-import CreateWorkspaceForm from "@/components/CreateWorkspaceForm";
+import CreateWorkspaceForm from "@/components/create/CreateWorkspaceForm";
 import { getAuthSession } from "@/lib/auth";
 
 const CreateWorkspacePage = async () => {
