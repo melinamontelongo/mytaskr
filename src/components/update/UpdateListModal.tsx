@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
+import Modal from "../ui/Modal";
 
 interface UpdateListModalProps {
     listId: string,
@@ -40,17 +41,19 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
             reset();
         },
         onSettled: () => {
+            //  Close modal
+            if (updateModal?.current) updateModal.current.click();
             router.refresh()
         }
     })
     return (
-        <>
-            <input ref={updateModal} type="checkbox" id={`updateListModal`} className="modal-toggle" />
-            <div className="modal" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
-                <div className="modal-box">
-                    <label htmlFor={`updateListModal`} aria-label="close" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">X</label>
+        <Modal
+            ref={updateModal}
+            id={"updateListModal"}
+            body={
+                <>
                     <h3 className="font-bold text-2xl text-center" id="modalTitle">Edit "{listName}" List</h3>
-                    <form onSubmit={handleSubmit((e) => updateList({...e, listId}))}>
+                    <form onSubmit={handleSubmit((e) => updateList({ ...e, listId }))}>
                         <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
                             <div className="flex flex-col gap-5 w-full">
                                 <div className="form-control mb-2">
@@ -82,9 +85,9 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
                             <label htmlFor={`updateListModal`} className="btn rounded normal-case">Cancel</label>
                         </div>
                     </form>
-                </div>
-            </div>
-        </>
+                </>
+            }
+        />
     )
 }
 

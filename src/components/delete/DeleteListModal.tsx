@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { toast } from "react-hot-toast";
 import { AiFillDelete } from "react-icons/ai";
+import Modal from "../ui/Modal";
 
 interface DeleteListModalProps {
     listId: string,
@@ -13,7 +14,7 @@ interface DeleteListModalProps {
 }
 const DeleteListModal = ({ listId, listName }: DeleteListModalProps) => {
     const router = useRouter();
-    
+
     const deleteModal = useRef<HTMLInputElement>(null);
 
     const { mutate: deleteList, isLoading } = useMutation({
@@ -35,23 +36,23 @@ const DeleteListModal = ({ listId, listName }: DeleteListModalProps) => {
     })
     return (
         <>
-            <input ref={deleteModal} type="checkbox" id={`deleteListModal`} className="modal-toggle" />
-            <div className="modal" aria-modal="true" role="dialog" aria-labelledby="modalTitle">
-                <div className="modal-box">
-                    <label htmlFor={`deleteListModal`} aria-label="close" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">X</label>
+            <Modal
+                ref={deleteModal}
+                id={"deleteListModal"}
+                body={<>
                     <h3 className="font-bold text-2xl text-center" id="modalTitle">Delete "{listName}" List?</h3>
                     <p>This list and its tasks will be deleted. This cannot be undone.</p>
-                    <div className="modal-action">
-                        <button className="btn btn-primary rounded normal-case" onClick={() => deleteList()}>
-                            {isLoading ? <span className="loading loading-spinner"></span>
-                                :
-                                "Delete"
-                            }
-                        </button>
-                        <label htmlFor={`deleteListModal`} className="btn rounded normal-case">Cancel</label>
-                    </div>
-                </div>
-            </div>
+                </>}
+                actionContent={<>
+                    <button className="btn btn-primary rounded normal-case" onClick={() => deleteList()}>
+                        {isLoading ? <span className="loading loading-spinner"></span>
+                            :
+                            "Delete"
+                        }
+                    </button>
+                    <label htmlFor={`deleteListModal`} className="btn rounded normal-case">Cancel</label>
+                </>}
+            />
         </>
     )
 }
