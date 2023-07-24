@@ -1,21 +1,22 @@
+"use client"
 import { User } from "next-auth";
-import Avatar from "./Avatar";
+import Avatar from "./ui/Avatar";
 import SignOutButton from "./auth/SignOutButton";
+import Dropdown from "./ui/Dropdown";
 
 interface UserDropdownProps {
     user: Pick<User, "name" | "email" | "image">
 }
-
 const UserDropdown = ({ user }: UserDropdownProps) => {
 
     return (
-        <>
-            <div className="dropdown dropdown-end" aria-label="user options" role="menu">
-                <label tabIndex={0} className="cursor-pointer">
-                    <Avatar userImg={user.image} userName={user.name || user.email!} />
-                </label>
-                <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-fit">
-                    {/* ACCOUNT INFO */}
+        <Dropdown
+            isAlignedEnd={true}
+            isPrimary={false}
+            isLabelStyled={false}
+            label={<Avatar userImg={user.image} userName={user.name || user.email!} />}
+            additionalInfo={
+                <div className="w-full">
                     <div className="mb-2">
                         <p className="uppercase font-medium text-xs">Account</p>
                     </div>
@@ -25,23 +26,17 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
                             {user.name && <p className="font-bold">{user.name}</p>}
                             {user.email && <p className="text-neutral-500 w-40 truncate">{user.email}</p>}
                         </div>
-
                     </div>
                     <div className="divider my-1"></div>
-                    {/* LINKS */}
-                    <div className="flex flex-col gap-2">
-
-                        <li role="menuitem"><a>Profile</a></li>
-
-                        <li role="menuitem"><a>Settings</a></li>
-
-                        <li role="menuitem"><a>Activity</a></li>
-
-                        <li role="menuitem"><SignOutButton /></li>
-                    </div>
-                </ul>
-            </div>
-        </>
+                </div>
+            }
+            items={[
+                <a>Profile</a>,
+                <a>Settings</a>,
+                <a>Activity</a>,
+                <SignOutButton />
+            ]}
+        />
     )
 }
 

@@ -5,6 +5,7 @@ import { Draggable, Droppable } from "react-beautiful-dnd";
 import CreateTaskBtnModal from "./CreateTaskBtnModal";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
+import Dropdown from "./ui/Dropdown";
 
 interface ExtendedList extends List {
     tasks: Task[]
@@ -22,10 +23,10 @@ interface ListContainerProps {
 const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteList, setUpdateList, setCurrentTask }: ListContainerProps) => {
 
     const showDeleteModal = () => {
-        setDeleteList(list);   
+        setDeleteList(list);
     }
     const showUpdateModal = () => {
-        setUpdateList(list);   
+        setUpdateList(list);
     }
     return (<>
         <Draggable draggableId={list.id} index={index} isDragDisabled={isListLoading}>
@@ -36,24 +37,19 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
                     className="bg-base-300 w-64 h-fit shadow-xl rounded">
                     <div className="py-2 px-4 flex items-center justify-between" {...provided.dragHandleProps}>
                         <h3 className="font-bold text-xl">{list.name}</h3>
-
-
-                        <details className="dropdown" role="menu">
-                            <summary className="m-1 btn btn-sm btn-ghost rounded"><BsThreeDots /></summary>
-                            <ul className="p-2 shadow menu dropdown-content z-[1] bg-base-200 rounded-box w-52">
-                                <li role="menuitem">
-                                    <label htmlFor={"updateListModal"} className="" onClick={() => showUpdateModal()}>
-                                        <AiFillEdit /> Edit
-                                    </label>
-                                </li>
-                                <li role="menuitem">
-                                    <label htmlFor={`deleteListModal`} className="" onClick={() => showDeleteModal()}>
-                                        <AiFillDelete /> Delete
-                                    </label>
-                                </li>
-                            </ul>
-                        </details>
-
+                        <Dropdown
+                            isPrimary={false}
+                            isLabelStyled={true}
+                            label={<><BsThreeDots /></>}
+                            items={[
+                                <label htmlFor={"updateListModal"} className="" onClick={() => showUpdateModal()}>
+                                    <AiFillEdit /> Edit
+                                </label>,
+                                <label htmlFor={`deleteListModal`} className="" onClick={() => showDeleteModal()}>
+                                    <AiFillDelete /> Delete
+                                </label>
+                            ]}
+                        />
                     </div>
                     <div className="overflow-y-auto w-64 min-h-[3rem] max-h-[calc(100vh-20rem)]">
                         <div className="px-2 min-h-[3rem] max-h-[calc(100vh-20rem)]">
@@ -64,7 +60,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
                                             ref={provided.innerRef}
                                             {...provided.droppableProps}>
                                             {list.tasks.map((task, index) => {
-                                                return <ListItem key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} setCurrentTask={setCurrentTask}/>
+                                                return <ListItem key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} setCurrentTask={setCurrentTask} />
                                             })}
                                             {provided.placeholder}
                                         </div>

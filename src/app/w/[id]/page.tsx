@@ -1,5 +1,5 @@
-import Avatar from "@/components/Avatar";
-import DisplayCard from "@/components/DisplayCard";
+import Avatar from "@/components/ui/Avatar";
+import DisplayCard from "@/components/ui/DisplayCard";
 import InviteToWorkspace from "@/components/InviteToWorkspace";
 import { db } from "@/lib/db";
 import Link from "next/link";

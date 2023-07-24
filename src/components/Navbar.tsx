@@ -8,6 +8,7 @@ import { GiHamburgerMenu } from "react-icons/gi";
 import { AiFillHome } from "react-icons/ai";
 import { RiTableFill } from "react-icons/ri";
 import { BsPersonWorkspace } from "react-icons/bs";
+import Dropdown from "./ui/Dropdown";
 
 const Navbar = async () => {
     const session = await getAuthSession();
@@ -35,21 +36,23 @@ const Navbar = async () => {
             <div className="md:hidden flex-1">
                 <Link href="/" className="btn btn-ghost normal-case text-2xl font-extrabold drop-shadow-md rounded">mytaskr.</Link>
                 {session && (
-                    <div className="dropdown dropdown-end">
-                        <label tabIndex={0} className="btn btn-ghost m-1" role="menu" aria-label="navigation"><GiHamburgerMenu className="text-xl" /></label>
-                        <ul tabIndex={0} className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52">
-                            <>
-                                <li><Link className="font-bold" href="/"><AiFillHome /> Home</Link></li>
-                                <li><Link className="font-bold" href="/w/create"><BsPersonWorkspace />Create workspace</Link></li>
-                                <li><Link className="font-bold" href="/b/create"><RiTableFill />Create board</Link></li>
-                            </>
-                        </ul>
-                    </div>
+                    <Dropdown 
+                        isPrimary={false}
+                        isAlignedEnd={true}
+                        isLabelStyled={true}
+                        label={<GiHamburgerMenu className="text-xl" />}
+                        items={[
+                            <Link className="font-bold" href="/"><AiFillHome /> Home</Link>,
+                            <Link className="font-bold" href="/w/create"><BsPersonWorkspace />Create workspace</Link>,
+                            <Link className="font-bold" href="/b/create"><RiTableFill />Create board</Link>,
+                            <ThemeToggler />
+                        ]}
+                    />
                 )}
             </div>
             <div className="md:hidden flex-none">
-                {session ? <UserDropdown user={session.user} /> :
-
+                {session ? <UserDropdown user={session.user} />
+                    :
                     <Link href="/sign-in" className="btn btn-primary">Sign in</Link>
                 }
             </div>

@@ -1,6 +1,6 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { TaskCreation, TaskUpdate } from "@/lib/validators";
+import { TaskCreation, TaskOrderUpdate } from "@/lib/validators";
 import { z } from "zod";
 //  Create task
 export async function POST(req: Request) {
@@ -63,7 +63,7 @@ export async function PATCH(req: Request) {
         const session = await getAuthSession();
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
         const body = await req.json();
-        const { listId, taskId, taskIds } = TaskUpdate.parse(body);
+        const { listId, taskId, taskIds } = TaskOrderUpdate.parse(body);
 
         const taskIndex = taskIds.findIndex((id) => id === taskId);
 
@@ -137,7 +137,7 @@ export async function PUT(req: Request) {
         const session = await getAuthSession();
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
         const body = await req.json();
-        const { listId, taskId, taskIds } = TaskUpdate.parse(body);
+        const { listId, taskId, taskIds } = TaskOrderUpdate.parse(body);
 
         const taskIndex = taskIds.findIndex((id) => id === taskId);
 

@@ -2,7 +2,7 @@ import React from "react";
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
-import DisplayCard from "./DisplayCard";
+import DisplayCard from "./ui/DisplayCard";
 
 const Dashboard = async () => {
     const session = await getAuthSession();
