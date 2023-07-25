@@ -1,4 +1,4 @@
-import Dashboard from "@/components/display/Dashboard";
+import Dashboard from "@/components/user/Dashboard";
 import { getAuthSession } from "@/lib/auth"
 
 export default async function Home() {

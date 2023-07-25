@@ -1,9 +1,9 @@
 import Link from "next/link";
 import ThemeToggler from "../ui/ThemeToggler";
 import { getAuthSession } from "@/lib/auth";
-import UserDropdown from "../display/UserDropdown";
-import WorkspacesDropdown from "../display/WorkspacesDropdown";
-import CreateDropdown from "../create/CreateDropdown";
+import UserDropdown from "../user/UserDropdown";
+import WorkspacesDropdown from "../workspace/WorkspacesDropdown";
+import CreateDropdown from "./CreateDropdown";
 import { GiHamburgerMenu } from "react-icons/gi";
 import { AiFillHome } from "react-icons/ai";
 import { RiTableFill } from "react-icons/ri";

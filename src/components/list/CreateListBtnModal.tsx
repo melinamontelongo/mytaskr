@@ -1,6 +1,6 @@
 import { IoMdAdd } from "react-icons/io";
-import CreateListForm from "./CreateListForm";
 import Modal from "../ui/Modal";
+import CreateListForm from "./CreateListForm";
 
 interface CreateListBtnModalProps {
     boardId: string,

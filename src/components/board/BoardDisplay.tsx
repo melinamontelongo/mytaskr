@@ -1,16 +1,16 @@
 "use client"
 import { Board, List, Task } from "@prisma/client";
-import ListContainer from "./ListContainer";
+import ListContainer from "../list/ListContainer";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { ListOrderUpdateType, TaskOrderUpdateType } from "@/lib/validators";
 import { toast } from "react-hot-toast";
-import DeleteListModal from "../delete/DeleteListModal";
-import UpdateListModal from "../update/UpdateListModal";
-import TaskModal from "../update/TaskModal";
+import DeleteListModal from "../list/DeleteListModal";
+import UpdateListModal from "../list/UpdateListModal";
+import TaskModal from "../task/TaskModal";
 
 interface OrderedList extends ExtendedList {
     tasksIds: string[]

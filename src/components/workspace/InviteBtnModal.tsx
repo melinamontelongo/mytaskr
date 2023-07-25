@@ -26,7 +26,7 @@ const InviteBtnModal = ({ inviteUserFn, invitedUsersIDs, inviteActionContent, wo
             </>}
             actionContent={<>
                 {inviteActionContent !== undefined && inviteActionContent}
-                <label htmlFor="addUsersModal" className="btn rounded normal-case">Close</label>
+                <label htmlFor="addUsersModal" className="btn bg-base-300 rounded normal-case">Close</label>
             </>}
         />
     </>

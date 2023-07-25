@@ -1,6 +1,6 @@
 import Avatar from "@/components/ui/Avatar";
 import DisplayCard from "@/components/ui/DisplayCard";
-import InviteToWorkspace from "@/components/users/InviteToWorkspace";
+import InviteToWorkspace from "@/components/workspace/InviteToWorkspace";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -34,7 +34,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
     });
 
     if (!workspace) return notFound();
-    console.log(workspace)
+
     return (
         <div className="h-screen max-w-2xl mx-auto flex flex-col gap-5 md:pt-30 pt-36 box-content">
             <div className="flex flex-col sm:flex-row justify-center sm:gap-20 sm:items-center gap-5 px-5">
@@ -57,11 +57,16 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     }
                     </div>
                 </div>
+        
                 <div>
-
-                </div>
+                    
+                </div>            
             </div>
-
+            {workspace.description && 
+            <div className="mx-auto">
+                <p>{workspace.description}</p>
+            </div>
+            }
             <div className="divider"></div>
             {/* BOARDS */}
             <div className="flex flex-row items-center justify-between">

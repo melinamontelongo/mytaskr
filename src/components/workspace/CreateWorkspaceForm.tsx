@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
-import InviteBtnModal from "../users/InviteBtnModal";
+import InviteBtnModal from "./InviteBtnModal";
 
 const CreateWorkspaceForm = () => {
     const router = useRouter();

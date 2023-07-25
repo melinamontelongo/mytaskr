@@ -1,6 +1,6 @@
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
-import CreateListBtnModal from "../create/CreateListBtnModal";
+import CreateListBtnModal from "../list/CreateListBtnModal";
 
 interface BoardTopbarProps {
     boardId: string,

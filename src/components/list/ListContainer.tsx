@@ -1,8 +1,8 @@
 "use client"
 import { List, Task } from "@prisma/client";
-import ListItem from "./ListItem";
+import TaskContainer from "../task/TaskContainer";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import CreateTaskBtnModal from "../create/CreateTaskBtnModal";
+import CreateTaskBtnModal from "../task/CreateTaskBtnModal";
 import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import Dropdown from "../ui/Dropdown";
@@ -60,7 +60,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
                                             ref={provided.innerRef}
                                             {...provided.droppableProps}>
                                             {list.tasks.map((task, index) => {
-                                                return <ListItem key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} setCurrentTask={setCurrentTask} />
+                                                return <TaskContainer key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} setCurrentTask={setCurrentTask} />
                                             })}
                                             {provided.placeholder}
                                         </div>

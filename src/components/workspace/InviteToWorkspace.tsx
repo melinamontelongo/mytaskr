@@ -4,7 +4,7 @@ import { useState } from "react";
 import InviteBtnModal from "./InviteBtnModal";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { WorkspaceInvite, WorkspaceInviteType } from "@/lib/validators";
+import { WorkspaceInviteType } from "@/lib/validators";
 import { useRouter } from "next/navigation";
 
 interface InviteToWorkspaceProps {
@@ -49,7 +49,7 @@ const InviteToWorkspace = ({ workspaceId }: InviteToWorkspaceProps) => {
         }
         router.refresh();
     }
-    const inviteActionContent = <button className="btn btn-primary" onClick={() => inviteUsers()}>Invite</button>
+    const inviteActionContent = <button className="btn btn-primary normal-case rounded" onClick={() => inviteUsers()}>Invite</button>
     return <>
         <InviteBtnModal
             inviteUserFn={toggleInvitedUsers}
