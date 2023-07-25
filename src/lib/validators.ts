@@ -33,6 +33,15 @@ export const WorkspaceInvite = z.object({
 })
 export type WorkspaceInviteType = z.infer<typeof WorkspaceInvite>
 
+//  Workspace update
+export const WorkspaceUpdate = z.object({
+    name: z.string().min(3).max(32),
+    description: z.string().max(150),
+    visibility: z.enum(["public", "private"]),
+    workspaceId: z.string(),
+})
+export type WorkspaceUpdateType = z.infer<typeof WorkspaceUpdate>
+
 /************ BOARD ************/
 
 //  Board creation request

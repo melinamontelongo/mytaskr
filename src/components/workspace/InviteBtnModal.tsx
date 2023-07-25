@@ -1,6 +1,7 @@
 import { ReactNode } from "react";
 import SearchUsers from "./SearchUsers";
 import Modal from "../ui/Modal";
+import { AiOutlineUsergroupAdd } from "react-icons/ai";
 
 interface InviteBtnModalProps {
     inviteUserFn: Function,
@@ -11,8 +12,9 @@ interface InviteBtnModalProps {
 
 const InviteBtnModal = ({ inviteUserFn, invitedUsersIDs, inviteActionContent, workspaceID }: InviteBtnModalProps) => {
     return (<>
-        {/* BTN */}
-        <label htmlFor="addUsersModal" className="btn bg-base-300 normal-case w-full rounded">Invite users</label>
+        <label htmlFor="addUsersModal" className="btn bg-base-300 normal-case w-full border-none flex items-center justify-center rounded">
+            <AiOutlineUsergroupAdd className="text-base-content text-xl" /> Invite
+        </label>
         
         <Modal
             id={"addUsersModal"}

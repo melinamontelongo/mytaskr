@@ -5,7 +5,7 @@ import UserDropdown from "../user/UserDropdown";
 import WorkspacesDropdown from "../workspace/WorkspacesDropdown";
 import CreateDropdown from "./CreateDropdown";
 import { GiHamburgerMenu } from "react-icons/gi";
-import { AiFillHome } from "react-icons/ai";
+import { AiOutlineHome } from "react-icons/ai";
 import { RiTableFill } from "react-icons/ri";
 import { BsPersonWorkspace } from "react-icons/bs";
 import Dropdown from "../ui/Dropdown";
@@ -19,7 +19,7 @@ const Navbar = async () => {
             <div className="md:flex md:flex-1 hidden">
                 <Link href="/" className="btn btn-ghost normal-case font-extrabold text-2xl drop-shadow-md rounded">mytaskr.</Link>
                 {session && (<>
-                    <Link className="btn btn-ghost normal-case rounded flex gap-2 items-center" href="/"><AiFillHome /> Home</Link>
+                    <Link className="btn btn-ghost normal-case rounded flex gap-2 items-center" href="/"><AiOutlineHome /> Home</Link>
                     <WorkspacesDropdown userId={session.user.id} />
                     <CreateDropdown />
                 </>)}
@@ -42,7 +42,7 @@ const Navbar = async () => {
                         isLabelStyled={true}
                         label={<GiHamburgerMenu className="text-xl" />}
                         items={[
-                            <Link className="font-bold" href="/"><AiFillHome /> Home</Link>,
+                            <Link className="font-bold" href="/"><AiOutlineHome /> Home</Link>,
                             <Link className="font-bold" href="/w/create"><BsPersonWorkspace />Create workspace</Link>,
                             <Link className="font-bold" href="/b/create"><RiTableFill />Create board</Link>,
                             <ThemeToggler />
