@@ -9,7 +9,7 @@ interface CreateListBtnModalProps {
 const CreateListBtnModal = ({ boardId }: CreateListBtnModalProps) => {
     return (<>
         {/* BTN */}
-        <label htmlFor="createListModal" className="btn bg-base-300 normal-case w-fit rounded">
+        <label htmlFor="createListModal" className="btn bg-base-300 normal-case w-full border-none flex items-center justify-center rounded">
             <IoMdAdd className="text-base-content text-xl" />
             Add list
         </label>

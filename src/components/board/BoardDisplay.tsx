@@ -40,7 +40,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             const payload = { taskId, listId, taskIds };
             const { data } = await axios.patch("/api/b/create/task/", payload);
             return data;
-        },//   TODO: TOASTS
+        },
         onError: (err) => {
             toast.error("Something went wrong!");
             router.refresh();
