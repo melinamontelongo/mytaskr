@@ -2,9 +2,8 @@
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { useRef } from "react";
 import { toast } from "react-hot-toast";
-import { AiFillDelete } from "react-icons/ai";
 import Modal from "../ui/Modal";
 
 interface DeleteListModalProps {

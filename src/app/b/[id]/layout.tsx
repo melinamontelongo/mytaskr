@@ -1,8 +1,5 @@
 import BoardSidebar from "@/components/board/BoardSidebar";
 import BoardTopbar from "@/components/board/BoardTopbar";
-import CreateListBtnModal from "@/components/list/CreateListBtnModal";
-import { db } from "@/lib/db";
-import { notFound } from "next/navigation";
 
 interface BoardLayoutProps {
     children: React.ReactNode,

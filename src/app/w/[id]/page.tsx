@@ -117,7 +117,9 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     )
                 })
                     :
-                    <p>No invited users in this workspace.</p>
+                    <div className="flex items-center gap-2">
+                        <p>No invited users in this workspace.</p>
+                    </div>
                 }
             </div>
         </div>
