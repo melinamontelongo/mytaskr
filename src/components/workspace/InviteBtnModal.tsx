@@ -1,4 +1,4 @@
-import { ReactNode } from "react";
+import { ForwardedRef, ReactNode, forwardRef } from "react";
 import SearchUsers from "./SearchUsers";
 import Modal from "../ui/Modal";
 import { AiOutlineUsergroupAdd } from "react-icons/ai";
@@ -10,13 +10,14 @@ interface InviteBtnModalProps {
     workspaceID?: string | null,
 }
 
-const InviteBtnModal = ({ inviteUserFn, invitedUsersIDs, inviteActionContent, workspaceID }: InviteBtnModalProps) => {
+const InviteBtnModal = forwardRef(({ inviteUserFn, invitedUsersIDs, inviteActionContent, workspaceID }: InviteBtnModalProps, ref:ForwardedRef<HTMLInputElement>) => {
     return (<>
         <label htmlFor="addUsersModal" className="btn bg-base-300 normal-case w-full border-none flex items-center justify-center rounded">
             <AiOutlineUsergroupAdd className="text-base-content text-xl" /> Invite
         </label>
-        
+
         <Modal
+            ref={ref}
             id={"addUsersModal"}
             body={<>
                 <h3 className="font-bold text-lg text-center" id="modalTitle">Invite users</h3>
@@ -33,6 +34,8 @@ const InviteBtnModal = ({ inviteUserFn, invitedUsersIDs, inviteActionContent, wo
         />
     </>
     )
-}
+})
+
+
 
 export default InviteBtnModal;

@@ -33,6 +33,13 @@ export const WorkspaceInvite = z.object({
 })
 export type WorkspaceInviteType = z.infer<typeof WorkspaceInvite>
 
+//  Workspace uninvite
+export const WorkspaceUninvite = z.object({
+    uninvitedUser: z.string(),
+    workspaceId: z.string(),
+})
+export type WorkspaceUninviteType = z.infer<typeof WorkspaceUninvite>
+
 //  Workspace update
 export const WorkspaceUpdate = z.object({
     name: z.string().min(3).max(32),

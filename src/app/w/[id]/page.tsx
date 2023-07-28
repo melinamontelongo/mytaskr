@@ -1,7 +1,9 @@
 import Avatar from "@/components/ui/Avatar";
 import DisplayCard from "@/components/ui/DisplayCard";
 import InviteToWorkspace from "@/components/workspace/InviteToWorkspace";
+import UninviteUserBtn from "@/components/workspace/UninviteUserBtn";
 import WorkspaceSettingsBtnModal from "@/components/workspace/WorkspaceSettingsBtnModal";
+import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -15,7 +17,7 @@ interface WorkspacePageProps {
 }
 
 const WorkspacePage = async ({ params }: WorkspacePageProps) => {
-
+    const session = await getAuthSession();
     const workspace = await db.workspace.findFirst({
         where: {
             id: params.id,
@@ -112,7 +114,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     return (
                         <div key={user.id} className="flex items-center gap-2">
                             <Avatar userImg={user.image} userName={user.name || user.email!} />
-                            {user.email}
+                            {user.email} {session?.user.id === workspace.creatorId && <UninviteUserBtn userId={user.id} workspaceId={workspace.id}/> }
                         </div>
                     )
                 })
