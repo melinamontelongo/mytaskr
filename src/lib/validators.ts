@@ -1,11 +1,22 @@
 import { z } from "zod";
 
-//  User
+/************ USER ************/
+
 export const UserCredentials = z.object({
     email: z.string().email({ message: "Invalid email address." }),
     password: z.string().min(6).max(18),
 })
 export type UserCredentialsType = z.infer<typeof UserCredentials>
+
+export const UserProfileUpdate = z.object({
+    username: z.string().min(3).max(16),
+    name: z.string().min(3).max(32),
+/*     image: z.nullable(z.any()
+        .refine((file) => file?.size <= 5000000, "Max image size is 5 MB")
+        .refine((file) => ["image/jpeg", "image/jpg", "image/png"].includes(file?.type), "Only .jpg, .jpg and .png images are supported."))
+         */
+    })
+export type UserProfileUpdateType = z.infer<typeof UserProfileUpdate>
 
 /************ WORKSPACE ************/
 

@@ -3,6 +3,7 @@ import { User } from "next-auth";
 import Avatar from "../ui/Avatar";
 import SignOutButton from "../auth/SignOutButton";
 import Dropdown from "../ui/Dropdown";
+import Link from "next/link";
 
 interface UserDropdownProps {
     user: Pick<User, "name" | "email" | "image">
@@ -31,7 +32,7 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
                 </div>
             }
             items={[
-                <a>Profile</a>,
+                <Link href="/u/profile">Profile</Link>,
                 <a>Settings</a>,
                 <a>Activity</a>,
                 <SignOutButton />
