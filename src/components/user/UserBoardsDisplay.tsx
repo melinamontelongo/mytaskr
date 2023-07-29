@@ -11,7 +11,7 @@ interface UserBoardsDisplayProps {
 }
 const UserBoardsDisplay = ({ workspaces }: UserBoardsDisplayProps) => {
     return (<>
-        {workspaces.map((w) => {
+        {workspaces.length > 0 ? workspaces.map((w) => {
             return (
                 <React.Fragment key={`workspaces${w.id}`}>
                     {w.boards.length > 0 ? w.boards.map((board) => {
@@ -24,7 +24,10 @@ const UserBoardsDisplay = ({ workspaces }: UserBoardsDisplayProps) => {
                     }
                 </React.Fragment>
             )
-        })}
+        })
+        :
+        <p>You have no boards. <Link href="b/create" className="font-bold text-primary hover:text-base-content">Create one.</Link></p>
+    }
     </>)
 }
 
