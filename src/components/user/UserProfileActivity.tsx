@@ -15,22 +15,31 @@ const UserProfileActivity = async () => {
                 include: {
                     workspace: true,
                     board: true,
+                },
+                orderBy: {
+                    createdAt: "desc"
                 }
             },
         }
     })
 
     return (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-4">
             {user?.activity.map((a) => {
                 console.log(a)
                 return (
                     <li key={a.id}>
                         <p>{a.description} { }
-                            {a.type.includes("Board") && <Link className="font-bold text-primary hover:underline" href={`/b/${a.boardId}`}>{a.name}</Link>}
-                            {a.type.includes("Workspace") && <Link className="font-bold text-primary hover:underline" href={`/w/${a.workspaceId}`}>{a.name}</Link>}
+                            {a.type.includes("Board") &&
+                                (a.boardId ? <Link className="font-bold text-primary hover:underline" href={`/b/${a.boardId}`}>{a.name}</Link>
+                                :
+                                <span className="font-bold text-neutral-500">{a.name}</span>)}
+                            {a.type.includes("Workspace") &&
+                                (a.workspaceId ? <Link className="font-bold text-primary hover:underline" href={`/w/${a.workspaceId}`}>{a.name}</Link>
+                                :
+                                <span className="font-bold text-neutral-500">{a.name}</span>)}
                         </p>
-                        <p className="text-sm">{format(new Date(a.createdAt), "MMM d',' yyy 'at' HH':'m")}</p>
+                        <p className="text-sm">{format(new Date(a.createdAt), "MMM d',' yyy 'at' HH':'mm")}</p>
                     </li>
                 )
             })}
