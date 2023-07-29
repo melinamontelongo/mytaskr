@@ -20,7 +20,8 @@ export async function DELETE(req: Request) {
                     select: {
                         creatorId: true,
                     }
-                }
+                },
+                name: true,
             }
         });
         if (boardToDelete?.workspace.creatorId !== session.user.id) return new Response("Only the workspace creator can delete boards", { status: 403 });
@@ -29,7 +30,15 @@ export async function DELETE(req: Request) {
             where: {
                 id: boardId,
             },
-        })
+        });
+        await db.activity.create({
+            data: {
+                type: "DeletedBoard",
+                name: boardToDelete.name,
+                description: "Deleted board",
+                userID: session.user.id,
+            }
+        });
         return new Response("Board deleted successfully!");
     } catch (e) {
         console.log(e)

@@ -12,15 +12,34 @@ export async function POST(req: Request) {
         const { name, description, visibility, invitedUsers } = WorkspaceCreation.parse(body);
         const isPublic = visibility === "public";
 
-        await db.workspace.create({
+        const workspace = await db.workspace.create({
             data: {
                 name, description, isPublic, creatorId: session.user.id, usersIDs: invitedUsers,
                 users: {
                     connect: invitedUsers.map(i => ({ id: i })) || [],
                 },
             },
-        })
-
+        });
+        await db.activity.create({
+            data: {
+                workspaceId: workspace.id,
+                type: "CreatedWorkspace",
+                name: workspace.name,
+                description: "Created workspace",
+                userID: session.user.id,
+            }
+        });
+        invitedUsers.map(async (u) => {
+            await db.activity.create({
+                data: {
+                    workspaceId: workspace.id,
+                    type: "JoinedWorkspace",
+                    name: workspace.name,
+                    description: `Joined workspace`,
+                    userID: u,
+                }
+            })
+        });
         return new Response("Workspace created successfully!")
     } catch (e) {
         if (e instanceof z.ZodError) {

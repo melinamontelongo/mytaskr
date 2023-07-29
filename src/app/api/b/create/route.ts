@@ -15,6 +15,14 @@ export async function POST(req: Request) {
         await db.board.create({
             data: {
                 name, description, workspaceID: workspaceId,
+                activity: {
+                    create: {
+                        userID: session.user.id,
+                        type: "CreatedBoard",
+                        name: name,
+                        description: "Created board",
+                    }
+                }
             }
         });
         return new Response("Board created successfully!");

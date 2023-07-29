@@ -20,8 +20,18 @@ export async function PUT(req: Request){
                 name, description, isPublic
             },
         })
+        await db.activity.create({
+            data: {
+                type: "UpdatedWorkspace",
+                name,
+                description: "Updated workspace",
+                workspaceId,
+                userID: session.user.id,
+            }
+        });
 
-        return new Response("Workspace updated successfully!")
+        return new Response("Workspace updated successfully!");
+        
     } catch (e) {
         if (e instanceof z.ZodError) {
             //  Wrong data was sent

@@ -18,9 +18,19 @@ export async function PUT(req:Request){
             data: {
                 name, description
             }
-        })
+        });
+        await db.activity.create({
+            data: {
+                type: "UpdatedBoard",
+                name,
+                description: "Updated board",
+                userID: session.user.id,
+                boardId,
+            }
+        });
 
         return new Response("Board updated successfully!");
+        
     } catch (e) {
         if (e instanceof z.ZodError) {
             //  Wrong data was sent

@@ -58,6 +58,7 @@ model User {
   //boardsIDs    String[]    @db.ObjectId
   //  Tasks the user was assigned to
   Task         Task[]
+  activity     Activity[]
 }
 
 model Workspace {
@@ -73,26 +74,30 @@ model Workspace {
   //  Privacy status
   isPublic Boolean
   //  Workspace members
-  users    User[]   @relation("workspaceMember", fields: [usersIDs], references: [id])
-  usersIDs String[] @db.ObjectId
+  users    User[]     @relation("workspaceMember", fields: [usersIDs], references: [id])
+  usersIDs String[]   @db.ObjectId
   //  Boards it contains
   boards   Board[]
+  //  Workspace's activity
+  activity Activity[]
 }
 
 model Board {
-  id          String    @id @default(auto()) @map("_id") @db.ObjectId
+  id          String     @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   description String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
   //  Workspace it belongs to
-  workspace   Workspace @relation(fields: [workspaceID], references: [id], onDelete: Cascade)
-  workspaceID String    @db.ObjectId
+  workspace   Workspace  @relation(fields: [workspaceID], references: [id], onDelete: Cascade)
+  workspaceID String     @db.ObjectId
   //  Board members
   //users       User[]    @relation(fields: [usersIDs], references: [id])
   //usersIDs    String[]  @db.ObjectId
   //  Lists it contains
   lists       List[]
+  //  Board's activity
+  activity    Activity[]
 }
 
 model List {
@@ -125,4 +130,29 @@ model Task {
   userID      String?  @db.ObjectId
 
   indexNumber Int
+}
+
+model Activity {
+  id          String       @id @default(auto()) @map("_id") @db.ObjectId
+  type        ActivityType
+  board       Board?       @relation(fields: [boardId], references: [id])
+  boardId     String?      @db.ObjectId
+  workspace   Workspace?   @relation(fields: [workspaceId], references: [id])
+  workspaceId String?      @db.ObjectId
+  name        String
+  description String
+  createdAt   DateTime     @default(now())
+  user        User         @relation(fields: [userID], references: [id])
+  userID      String       @db.ObjectId
+}
+
+enum ActivityType {
+  CreatedWorkspace
+  CreatedBoard
+  JoinedWorkspace
+  JoinedBoard
+  UpdatedWorkspace
+  UpdatedBoard
+  DeletedWorkspace
+  DeletedBoard
 }

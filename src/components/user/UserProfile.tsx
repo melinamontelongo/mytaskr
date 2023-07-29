@@ -2,6 +2,7 @@ import { User } from "@prisma/client";
 import Avatar from "../ui/Avatar";
 import UserProfileBtnModal from "./UserProfileBtnModal";
 import UserProfilePicModal from "./UserProfilePicModal";
+import UserProfileActivity from "./UserProfileActivity";
 
 interface UserProfileProps {
     user: Pick<User, "name" | "email" | "image" | "username">,
@@ -9,7 +10,7 @@ interface UserProfileProps {
 
 const UserProfile = ({ user }: UserProfileProps) => {
     return <>
-        <h1 className="text-2xl font-bold">Profile</h1>
+        <h2 className="text-2xl font-bold">Profile</h2>
         <div className="flex items-center justify-start gap-2">
             <div className="tooltip" data-tip="Change profile picture">
                 <label className="cursor-pointer" htmlFor="userProfilePicModal">
@@ -26,6 +27,10 @@ const UserProfile = ({ user }: UserProfileProps) => {
             <UserProfilePicModal />
         </div>
         <div className="divider"></div>
+        <h2 className="text-2xl font-bold">Activity</h2>
+        <div className="flex items-center justify-start gap-2">
+            <UserProfileActivity />
+        </div>
     </>
 }
 

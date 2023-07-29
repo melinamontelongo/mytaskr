@@ -16,6 +16,8 @@ export async function PATCH(req: Request) {
                 id: workspaceId,
             }
         });
+        if(!workspace) return new Response("Workspace not found.",  { status: 404 });
+
         const usersToInvite: string[] = [];
         //  If workspace already has users
         if(workspace?.usersIDs && workspace?.usersIDs?.length > 0){
@@ -36,7 +38,7 @@ export async function PATCH(req: Request) {
                 return;
             })
         }
-        const updatedWorkspace = await db.workspace.update({
+        await db.workspace.update({
             where: {
                 id: workspaceId,
             },
@@ -46,6 +48,19 @@ export async function PATCH(req: Request) {
                 },
                 users: {
                     connect: usersToInvite.map(i => ({ id: i })) || [],
+                },
+                activity: {
+                    createMany: {
+                        data: usersToInvite.map(i => {
+                            return {
+                                workspaceId: workspace.id,
+                                userID: i,
+                                type: "JoinedWorkspace",
+                                name: workspace.name,
+                                description: "Joined workspace",
+                            }
+                        })
+                    }
                 }
             }
         });

@@ -17,6 +17,7 @@ export async function DELETE(req: Request){
             },
             select: {
                 creatorId: true,
+                name: true,
             }
         })
         if(workspaceToDelete?.creatorId !== session.user.id) return new Response("Only the workspace creator can delete it", {status: 403})
@@ -25,6 +26,14 @@ export async function DELETE(req: Request){
             where: {
                 id: workspaceId,
             },
+        })
+        await db.activity.create({
+            data: {
+                name: workspaceToDelete.name,
+                type: "DeletedWorkspace",
+                description: "Deleted workspace",
+                userID: session.user.id,
+            }
         })
         return new Response("Workspace deleted successfully!");
     } catch (e) {
