@@ -10,6 +10,7 @@ import { useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import Modal from "../ui/Modal";
+import { dateFormatter } from "@/lib/dateFormatter";
 
 
 interface TaskModalProps {
@@ -68,9 +69,10 @@ const TaskModal = ({ task, listName }: TaskModalProps) => {
             body={
                 <>
                     <form onSubmit={handleSubmit((e) => updateTask({ ...e, taskId: task.id }))}>
-                        <div className="text-center">
-                            <h3 className="font-bold text-2xl" id="modalTitle">Edit task</h3>
+                        <h3 className="font-bold text-2xl text-center" id="modalTitle">Edit task</h3>
+                        <div className="my-2">
                             {listName && <p className="text-sm">On list <span className="font-bold">{listName}</span></p>}
+                            <p className="text-sm">Created on <span className="font-bold">{dateFormatter(task.createdAt)}</span></p>
                         </div>
                         <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
                             <div className="flex flex-col gap-5 w-full">
