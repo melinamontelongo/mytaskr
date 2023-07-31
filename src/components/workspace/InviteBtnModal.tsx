@@ -36,6 +36,6 @@ const InviteBtnModal = forwardRef(({ inviteUserFn, invitedUsersIDs, inviteAction
     )
 })
 
-
+InviteBtnModal.displayName = "InviteBtnModal";
 
 export default InviteBtnModal;

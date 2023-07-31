@@ -52,7 +52,7 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
             id={"updateListModal"}
             body={
                 <>
-                    <h3 className="font-bold text-2xl text-center" id="modalTitle">Edit "{listName}" List</h3>
+                    <h3 className="font-bold text-2xl text-center" id="modalTitle">Edit &quot;{listName}&quot; List</h3>
                     <form onSubmit={handleSubmit((e) => updateList({ ...e, listId }))}>
                         <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
                             <div className="flex flex-col gap-5 w-full">

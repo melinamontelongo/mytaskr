@@ -32,8 +32,8 @@ const UserDropdown = ({ user }: UserDropdownProps) => {
                 </div>
             }
             items={[
-                <Link href="/u/profile">Profile</Link>,
-                <SignOutButton />
+                <Link key={`userDropdownProfileLink`} href="/u/profile">Profile</Link>,
+                <SignOutButton key={`userDropdownSignOutButton`} />
             ]}
         />
     )

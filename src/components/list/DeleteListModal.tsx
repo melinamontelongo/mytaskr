@@ -39,7 +39,7 @@ const DeleteListModal = ({ listId, listName }: DeleteListModalProps) => {
                 ref={deleteModal}
                 id={"deleteListModal"}
                 body={<>
-                    <h3 className="font-bold text-2xl text-center" id="modalTitle">Delete "{listName}" List?</h3>
+                    <h3 className="font-bold text-2xl text-center" id="modalTitle">Delete &quot;{listName}&quot; List?</h3>
                     <p>This list and its tasks will be deleted. This cannot be undone.</p>
                 </>}
                 actionContent={<>

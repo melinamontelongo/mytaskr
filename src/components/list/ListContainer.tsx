@@ -42,10 +42,10 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
                             isLabelStyled={true}
                             label={<><BsThreeDots /></>}
                             items={[
-                                <label htmlFor={"updateListModal"} className="" onClick={() => showUpdateModal()}>
+                                <label key={`updateListModal${list.id}`} htmlFor={"updateListModal"} className="" onClick={() => showUpdateModal()}>
                                     <AiFillEdit /> Edit
                                 </label>,
-                                <label htmlFor={`deleteListModal`} className="" onClick={() => showDeleteModal()}>
+                                <label key={`deleteListModal${list.id}`} htmlFor={`deleteListModal`} className="" onClick={() => showDeleteModal()}>
                                     <AiFillDelete /> Delete
                                 </label>
                             ]}

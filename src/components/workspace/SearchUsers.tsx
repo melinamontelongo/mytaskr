@@ -31,7 +31,7 @@ const SearchUsers = ({ inviteUserFn, invitedUsersIDs, workspaceID }: SearchUsers
     }, 300)
     const debounceRequest = useCallback(() => {
         request();
-    }, []);
+    }, [request]);
 
     return (<>
         <input

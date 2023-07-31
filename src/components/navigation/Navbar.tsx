@@ -36,16 +36,16 @@ const Navbar = async () => {
             <div className="md:hidden flex-1">
                 <Link href="/" className="btn btn-ghost normal-case text-2xl font-extrabold drop-shadow-md rounded">mytaskr.</Link>
                 {session && (
-                    <Dropdown 
+                    <Dropdown
                         isPrimary={false}
                         isAlignedEnd={true}
                         isLabelStyled={true}
                         label={<GiHamburgerMenu className="text-xl" />}
                         items={[
-                            <Link className="font-bold" href="/"><AiOutlineHome /> Home</Link>,
-                            <Link className="font-bold" href="/w/create"><BsPersonWorkspace />Create workspace</Link>,
-                            <Link className="font-bold" href="/b/create"><RiTableFill />Create board</Link>,
-                            <ThemeToggler />
+                            <Link key={`navbarHomeLink`} className="font-bold" href="/"><AiOutlineHome /> Home</Link>,
+                            <Link key={`navbarCreateWLink`} className="font-bold" href="/w/create"><BsPersonWorkspace />Create workspace</Link>,
+                            <Link key={`navbarCreateBLink`} className="font-bold" href="/b/create"><RiTableFill />Create board</Link>,
+                            <ThemeToggler key={`navbarThemeToggler`} />
                         ]}
                     />
                 )}
@@ -59,5 +59,6 @@ const Navbar = async () => {
         </div>
     )
 }
+Navbar.displayName = "Navbar";
 
 export default Navbar;

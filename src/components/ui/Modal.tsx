@@ -22,7 +22,8 @@ const Modal = forwardRef(({ id, body, actionContent }: ModalProps, ref: Forwarde
             </div>
         </>
     )
-}
-)
+})
+
+Modal.displayName = "Modal";
 
 export default Modal;
