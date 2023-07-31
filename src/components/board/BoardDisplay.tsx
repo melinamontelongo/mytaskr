@@ -2,7 +2,7 @@
 import { Board, List, Task } from "@prisma/client";
 import ListContainer from "../list/ListContainer";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -30,10 +30,14 @@ interface BoardDisplayProps {
 
 const BoardDisplay = ({ board }: BoardDisplayProps) => {
     const router = useRouter();
-    const [boardInfo, setBoardInfo] = useState<ExtendedBoard>(board);
+    const [boardInfo, setBoardInfo] = useState<ExtendedBoard>();
     const [currentDeleteList, setCurrentDeleteList] = useState<List>();
     const [currentUpdateList, setCurrentUpdateList] = useState<List>();
     const [currentTask, setCurrentTask] = useState<Task>();
+
+    useEffect(() => {
+        setBoardInfo(board);
+    }, [board])
 
     const { mutate: reorderTasks, isLoading: intraListLoading } = useMutation({
         mutationFn: async ({ taskId, listId, taskIds }: TaskOrderUpdateType) => {
@@ -81,6 +85,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
     });
 
     const onDragEndHandler = async (result: any) => {
+        if(!boardInfo) return;
         const { destination, source, draggableId, type } = result;
 
         if (!destination) return;
@@ -203,6 +208,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             setBoardInfo({ ...boardInfo, lists: listArr })
         }
     };
+    if(!boardInfo) return null;
 
     return (<>
         <div className="">
@@ -231,7 +237,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
 
         {currentDeleteList && <DeleteListModal listId={currentDeleteList?.id} listName={currentDeleteList?.name} />}
         {currentUpdateList && <UpdateListModal listId={currentUpdateList?.id} listName={currentUpdateList?.name} listDescription={currentUpdateList?.description} />}
-        {currentTask && <TaskModal task={currentTask} listName={board.lists.filter(list => list.id === currentTask.listId)[0].name} />}
+        {currentTask && <TaskModal task={currentTask} listName={board.lists.filter(list => list.id === currentTask?.listId)[0]?.name} />}
     </>
     )
 }

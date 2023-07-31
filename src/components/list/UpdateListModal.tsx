@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import Modal from "../ui/Modal";
@@ -17,8 +17,11 @@ interface UpdateListModalProps {
 
 const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalProps) => {
     const router = useRouter();
-
     const updateModal = useRef<HTMLInputElement>(null);
+
+    useEffect(() => {
+        reset({name: listName, description: listDescription ?? ""});
+    }, [listId, listName, listDescription]);
 
     const { register, handleSubmit, formState: { errors }, reset } = useForm<ListCreationFormType>({
         resolver: zodResolver(ListCreationForm),
@@ -26,7 +29,7 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
             name: listName,
             description: listDescription ?? "",
         }
-    })
+    });
     const { mutate: updateList, isLoading } = useMutation({
         mutationFn: async ({ name, description, listId }: ListUpdateType) => {
             const payload: ListUpdateType = { name, description, listId }
@@ -38,14 +41,14 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
         },
         onSuccess: () => {
             toast.success("List edited successfully!")
-            reset();
         },
         onSettled: () => {
+            reset();
             //  Close modal
             if (updateModal?.current) updateModal.current.click();
             router.refresh()
         }
-    })
+    });
     return (
         <Modal
             ref={updateModal}
@@ -61,7 +64,7 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
                                     <input type="text" className={`input input-bordered rounded ${errors.name && "border-error"}`} {...register("name")} />
                                     {errors.name && <p className="text-error text-xs my-2">The name of the list is required.</p>}
                                     <label className="label">
-                                        <span className="label-text-alt">This is the name of your new list.</span>
+                                        <span className="label-text-alt">This is the name of your list.</span>
                                     </label>
                                 </div>
 

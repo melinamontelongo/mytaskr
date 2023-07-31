@@ -12,12 +12,14 @@ export async function PUT(req:Request){
         const { name, username } = UserProfileUpdate.parse(body);
 
         //  Check if username exists already
-        const usernameExists = await db.user.findFirst({
-            where: {
-                username,
-            }
-        })
-        if(usernameExists) return new Response("Username already exists.")
+        if(session.user.username !== username){
+            const usernameExists = await db.user.findFirst({
+                where: {
+                    username,
+                }
+            })
+            if(usernameExists) return new Response("Username already exists.", {status: 409});
+        };
         await db.user.update({
             where: {
                 id: session.user.id,

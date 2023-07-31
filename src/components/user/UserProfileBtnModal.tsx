@@ -9,7 +9,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 
 interface UserProfileBtnModalProps {
     user: Pick<User, "name" | "email" | "image" | "username">,
@@ -18,7 +18,7 @@ interface UserProfileBtnModalProps {
 const UserProfileBtnModal = ({ user }: UserProfileBtnModalProps) => {
     const router = useRouter();
     const profileUpdateModal = useRef<HTMLInputElement>(null);
-    const { handleSubmit, register, formState: { errors } } = useForm<UserProfileUpdateType>({
+    const { handleSubmit, register, formState: { errors }, reset } = useForm<UserProfileUpdateType>({
         resolver: zodResolver(UserProfileUpdate),
         defaultValues: {
             username: user.username ?? "",
@@ -32,24 +32,25 @@ const UserProfileBtnModal = ({ user }: UserProfileBtnModalProps) => {
             return data;
         },
         onError: (err) => {
+            if(err instanceof AxiosError && err.response) return toast.error(err.response.data);
             toast.error("Could not edit profile.");
         },
         onSuccess: () => {
             toast.success("Profile edited successfully!");
+            router.refresh();
+        },
+        onSettled: () => {
+            reset();
             //  Close modal
             if (profileUpdateModal.current) profileUpdateModal.current.click()
-            router.refresh();
         }
-    })
-    console.log(errors)
+    });
     return (
         <>
-            {/* BTN */}
             <label htmlFor="updateUserProfile" className="btn btn-ghost btn-circle normal-case border-none flex items-center justify-center">
                 <AiFillEdit className="text-base-content text-xl" />
             </label>
 
-            {/* MODAL */}
             <Modal
                 ref={profileUpdateModal}
                 id={"updateUserProfile"}
@@ -62,9 +63,6 @@ const UserProfileBtnModal = ({ user }: UserProfileBtnModalProps) => {
                     )}>
                         <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
                             <div className="flex flex-col gap-5 w-full">
-{/*                                 <div className="mx-auto mt-4">
-                                    <Avatar userImg={avatarImg} userName={user.name ?? user.email} />
-                                </div> */}
                                 <div className="form-control mb-2">
                                     <label className="label font-bold text-lg">Name</label>
                                     <input type="text" className={`input input-bordered rounded ${errors.name && "border-error"}`} {...register("name")} />

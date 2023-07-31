@@ -26,10 +26,8 @@ const BoardSettingsBtnModal = ({ boardId, boardName, boardDescription }: BoardSe
             description: boardDescription ?? "",
         }
     });
-console.log("ERRORS", errors)
     const { mutate: updateBoard, isLoading: isUpdateLoading } = useMutation({
         mutationFn: async ({ name, description, boardId }: BoardUpdateType) => {
-            console.log("UPLOADING? ", name, description, boardId)
             const payload: BoardUpdateType = { name, description, boardId }
             const { data } = await axios.put(`/api/b/update/`, payload);
             return data;
