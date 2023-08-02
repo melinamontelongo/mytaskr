@@ -13,13 +13,13 @@ import Dropdown from "../ui/Dropdown";
 const Navbar = async () => {
     const session = await getAuthSession();
     return (
-        <div className="navbar bg-base-100 shadow-lg h-14 fixed top-0 left-0 right-0 z-50">
+        <div className="navbar bg-base-100 h-fit shadow-sm fixed top-0 left-0 right-0 z-50">
 
             {/* bigger screens */}
             <div className="md:flex md:flex-1 hidden">
-                <Link href="/" className="btn btn-ghost normal-case font-extrabold text-2xl drop-shadow-md rounded">mytaskr.</Link>
+                <Link href="/" className="btn btn-sm btn-ghost normal-case font-extrabold text-2xl drop-shadow-md rounded">mytaskr.</Link>
                 {session && (<>
-                    <Link className="btn btn-ghost normal-case rounded flex gap-2 items-center" href="/"><AiOutlineHome /> Home</Link>
+                    <Link className="btn btn-sm btn-ghost normal-case rounded flex gap-2 items-center" href="/"><AiOutlineHome /> Home</Link>
                     <WorkspacesDropdown userId={session.user.id} />
                     <CreateDropdown />
                 </>)}
@@ -34,7 +34,7 @@ const Navbar = async () => {
 
             {/* smaller screens */}
             <div className="md:hidden flex-1">
-                <Link href="/" className="btn btn-ghost normal-case text-2xl font-extrabold drop-shadow-md rounded">mytaskr.</Link>
+                <Link href="/" className="btn btn-sm btn-ghost normal-case text-2xl font-extrabold drop-shadow-md rounded">mytaskr.</Link>
                 {session && (
                     <Dropdown
                         isPrimary={false}

@@ -20,7 +20,7 @@ const Dropdown = ({ items, label, additionalInfo, isLabelStyled, isPrimary, isAl
     return (
         <details ref={ref} className={`dropdown ${isAlignedEnd && "dropdown-end"}`} role="menu">
             <summary
-                className={`${isLabelStyled ? `btn ${isPrimary ? "btn-primary" : "btn-ghost"} m-1 normal-case rounded` : "list-none cursor-pointer"}`}>
+                className={`${isLabelStyled ? `btn btn-sm ${isPrimary ? "btn-primary" : "btn-ghost"} m-1 normal-case rounded` : "list-none cursor-pointer"}`}>
                 {label}
             </summary>
             <ul className={`p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box ${additionalInfo ? "w-fit" : ""}`}>
