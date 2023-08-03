@@ -19,10 +19,6 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
     const router = useRouter();
     const updateModal = useRef<HTMLInputElement>(null);
 
-    useEffect(() => {
-        reset({name: listName, description: listDescription ?? ""});
-    }, [listId, listName, listDescription]);
-
     const { register, handleSubmit, formState: { errors }, reset } = useForm<ListCreationFormType>({
         resolver: zodResolver(ListCreationForm),
         defaultValues: {
@@ -30,6 +26,11 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
             description: listDescription ?? "",
         }
     });
+
+    useEffect(() => {
+        reset({name: listName, description: listDescription ?? ""});
+    }, [listId, listName, listDescription]);
+
     const { mutate: updateList, isLoading } = useMutation({
         mutationFn: async ({ name, description, listId }: ListUpdateType) => {
             const payload: ListUpdateType = { name, description, listId }

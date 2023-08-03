@@ -6,7 +6,7 @@ import { Task } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import { useRouter } from "next/navigation";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import Modal from "../ui/Modal";
@@ -20,13 +20,19 @@ interface TaskModalProps {
 const TaskModal = ({ task, listName }: TaskModalProps) => {
     const router = useRouter();
     const modal = useRef<HTMLInputElement>(null);
-    const { handleSubmit, formState: { errors }, register } = useForm<TaskCreationFormType>({
+
+    const { handleSubmit, formState: { errors }, register, reset } = useForm<TaskCreationFormType>({
         resolver: zodResolver(TaskCreationForm),
         defaultValues: {
             name: task.name,
             description: task.description ?? "",
         }
     });
+
+    useEffect(() => {
+        reset({ name: task.name, description: task.description ?? "" });
+    }, [task.id, task.name, task.description]);
+
     const { mutate: updateTask, isLoading: isUpdateLoading } = useMutation({
         mutationFn: async ({ name, description, taskId }: TaskUpdateType) => {
             const payload: TaskUpdateType = { name, description, taskId }
@@ -79,7 +85,7 @@ const TaskModal = ({ task, listName }: TaskModalProps) => {
                                 <div className="form-control mb-2">
                                     <label className="label font-bold text-lg">Name</label>
                                     <input type="text" className={`input input-bordered rounded ${errors.name && "border-error"}`} {...register("name")} />
-                                    {errors.name && <p className="text-error text-xs my-2">The name of the task is required.</p>}
+                                    {errors.name && <p className="text-error text-xs my-2">{errors.name.message ?? "The name of the task is required."}</p>}
                                     <label className="label">
                                         <span className="label-text-alt">This is the name of your task.</span>
                                     </label>
