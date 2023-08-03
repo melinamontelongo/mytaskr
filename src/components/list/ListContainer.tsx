@@ -34,7 +34,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
                 <div
                     {...provided.draggableProps}
                     ref={provided.innerRef}
-                    className="bg-base-300 w-64 h-fit shadow-xl rounded">
+                    className="bg-base-200 w-64 h-fit shadow-xl rounded">
                     <div className="py-2 px-4 flex items-center justify-between" {...provided.dragHandleProps}>
                         <h3 className="font-bold text-xl">{list.name}</h3>
                         <Dropdown

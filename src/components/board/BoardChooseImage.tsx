@@ -31,16 +31,7 @@ const BoardChooseImage = ({ selectImageAction }: BoardImageBtnModal) => {
             toast.error("An error occurred while searching for photos.")
         }
     });
-
-    const { mutate: triggerDownload } = useMutation({
-        mutationFn: async () => {
-            if (!selectedImage) return;
-            const { data } = await axios.get(`${selectedImage.links.download_location}`, { headers: { Authorization: `Client-ID ${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}` } })
-            console.log(data);
-            return data;
-        }
-    })
-
+    
     //  Debounce
     const request = debounce(() => {
         searchImageQuery();
@@ -51,7 +42,7 @@ const BoardChooseImage = ({ selectImageAction }: BoardImageBtnModal) => {
     }, [request]);
     return (<>
         <>
-            <div className="form-control mb-2">
+            <div className="form-control mb-4">
                 <input
                     type="text"
                     className="input input-bordered rounded"
@@ -67,14 +58,14 @@ const BoardChooseImage = ({ selectImageAction }: BoardImageBtnModal) => {
                 {imageQuery.length > 0 ? (<>
                     {isLoading && <BiLoaderAlt className="animate-spin text-2xl mx-auto" />}
                     {imageResults && imageResults.length > 0 && (
-                        imageResults.map((result: any) => {
+                        imageResults.map((result: UnsplashPhotoType) => {
                             return (
                                 <div key={result.id} className={`w-40 h-40 relative group cursor-pointer`} onClick={() => {
                                     setSelectedImage(result)
                                     selectImageAction(result)
                                 }}>
                                     <div className={`relative w-40 h-40  ${selectedImage?.id === result.id && "border border-2 border-base-content"}`}>
-                                        <Image src={result.urls.small} alt={result.alt_description} style={{ objectFit: "cover" }} fill={true} />
+                                        <Image placeholder="blur" blurDataURL={result.blur_hash}  src={result.urls.small} alt={result.alt_description} style={{ objectFit: "cover" }} fill={true} />
                                     </div>
                                     <div className="absolute md:group-hover:visible md:invisible bottom-0 left-0 bg-base-200/50 md:h-full md:w-full h-1/3 flex justify-center items-center">
                                         <p className="text-sm text-center">Photo by { }
@@ -111,7 +102,6 @@ const BoardChooseImage = ({ selectImageAction }: BoardImageBtnModal) => {
             }
             {imageResults.length > 0 &&
                 <div className="flex justify-center gap-2 mt-5">
-                    <label htmlFor={`boardImage`} className="btn btn-sm btn-primary rounded normal-case" onClick={() => triggerDownload()}>Select</label>
                     <label htmlFor={`boardImage`} className="btn btn-sm bg-base-300 rounded normal-case" onClick={() => {
                         setSelectedImage(undefined)
                         selectImageAction(undefined)

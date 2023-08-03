@@ -10,7 +10,7 @@ import { ListOrderUpdateType, TaskOrderUpdateType } from "@/lib/validators";
 import { toast } from "react-hot-toast";
 import DeleteListModal from "../list/DeleteListModal";
 import UpdateListModal from "../list/UpdateListModal";
-import TaskModal from "../task/TaskModal";
+import UpdateTaskModal from "../task/UpdateTaskModal";
 
 interface OrderedList extends ExtendedList {
     tasksIds: string[]
@@ -26,7 +26,6 @@ interface ExtendedBoard extends Board {
 interface BoardDisplayProps {
     board: ExtendedBoard
 }
-
 
 const BoardDisplay = ({ board }: BoardDisplayProps) => {
     const router = useRouter();
@@ -237,7 +236,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
 
         {currentDeleteList && <DeleteListModal listId={currentDeleteList?.id} listName={currentDeleteList?.name} />}
         {currentUpdateList && <UpdateListModal listId={currentUpdateList?.id} listName={currentUpdateList?.name} listDescription={currentUpdateList?.description} />}
-        {currentTask && <TaskModal task={currentTask} listName={board.lists.filter(list => list.id === currentTask?.listId)[0]?.name} />}
+        {currentTask && <UpdateTaskModal task={currentTask} listName={board.lists.filter(list => list.id === currentTask?.listId)[0]?.name} />}
     </>
     )
 }

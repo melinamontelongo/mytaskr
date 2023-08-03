@@ -86,7 +86,7 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
                                     "Save"
                                 }
                             </button>
-                            <label htmlFor={`updateListModal`} className="btn rounded normal-case">Cancel</label>
+                            <label htmlFor={`updateListModal`} className="btn btn-base-300 rounded normal-case">Cancel</label>
                         </div>
                     </form>
                 </>

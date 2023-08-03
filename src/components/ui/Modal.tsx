@@ -15,7 +15,7 @@ const Modal = forwardRef(({ id, body, actionContent }: ModalProps, ref: Forwarde
             <div className="modal">
                 <div className="modal-box bg-base-200">
                     <label htmlFor={id} aria-label="close" className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"><AiOutlineClose /></label>
-                    <div className="mt-5">
+                    <div className="mt-4">
                         {body}
                         {actionContent &&
                             <div className="modal-action">

@@ -13,7 +13,7 @@ import Dropdown from "../ui/Dropdown";
 const Navbar = async () => {
     const session = await getAuthSession();
     return (
-        <div className="navbar bg-base-100 h-fit shadow-sm fixed top-0 left-0 right-0 z-50">
+        <div className="navbar bg-base-200 h-fit shadow-sm fixed top-0 left-0 right-0 z-50">
 
             {/* bigger screens */}
             <div className="md:flex md:flex-1 hidden">

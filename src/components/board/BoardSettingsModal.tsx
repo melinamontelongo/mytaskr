@@ -14,7 +14,7 @@ interface BoardSettingsModalProps {
     boardId: string,
     boardName: string,
     boardDescription?: string | null,
-    boardImages?: {backgroundImageFull: string | null, backgroundImageSmall: string | null},
+    boardImages?: { backgroundImageFull: string | null, backgroundImageSmall: string | null },
 }
 
 const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages }: BoardSettingsModalProps) => {
@@ -54,7 +54,6 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
             return data;
         },
         onError: (err) => {
-            console.log(err)
             if (err instanceof AxiosError) {
                 if (err?.response?.status === 403) return toast.error("Only the author of the workspace can delete its boards.");
                 if (err?.response?.status === 401) return toast.error("You must be logged in.");
@@ -70,6 +69,19 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
         }
     });
 
+    const { mutate: triggerImageDownload } = useMutation({
+        mutationFn: async () => {
+            if (!chosenImage) return;
+            const { data } = await axios.get(`${chosenImage.links.download_location}`, { headers: { Authorization: `Client-ID ${process.env.NEXT_PUBLIC_UNSPLASH_ACCESS_KEY}` } });
+            return data;
+        }
+    });
+
+    const chooseImageAction = (image:UnsplashPhotoType) => {
+        setChosenImage(image);
+        triggerImageDownload();
+    };
+    
     return (
         <Modal
             ref={boardModal}
@@ -77,14 +89,15 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
             body={<>
                 <>
                     <form onSubmit={handleSubmit((e) => {
-                        const values:BoardUpdateType = {
-                            ...e, 
-                            boardId, 
+                        const values: BoardUpdateType = {
+                            ...e,
+                            boardId,
                             backgroundImageFull: chosenImage?.urls.full ?? boardImages?.backgroundImageFull ?? undefined,
                             backgroundImageSmall: chosenImage?.urls.small ?? boardImages?.backgroundImageSmall ?? undefined
                         }
-                        updateBoard({ ...values })}
-                        )}>
+                        updateBoard({ ...values })
+                    }
+                    )}>
                         <div className="text-center">
                             <h3 className="font-bold text-2xl" id="modalTitle">Board Settings</h3>
                         </div>
@@ -109,17 +122,21 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
                                 </div>
                                 <div>
                                     <label className="label font-bold text-lg">Change background image</label>
-                                    <BoardChooseImage selectImageAction={setChosenImage} />
+                                    <BoardChooseImage selectImageAction={chooseImageAction} />
+                                </div>
+                                <div className="mb-2">
+                                    <button type="button" className="btn btn-sm btn-outline btn-error rounded normal-case" onClick={() => deleteBoard()}>
+                                        {isDeleteLoading ? <span className="loading loading-spinner"></span>
+                                            :
+                                            "Delete board"
+                                        }
+                                    </button>
                                 </div>
                             </div>
+
                         </div>
-                        <div className="modal-action justify-center">
-                            <button type="button" className="btn btn-outline btn-error rounded normal-case" onClick={() => deleteBoard()}>
-                                {isDeleteLoading ? <span className="loading loading-spinner"></span>
-                                    :
-                                    "Delete"
-                                }
-                            </button>
+
+                        <div className="modal-action">
                             <button type="submit" className="btn btn-primary rounded normal-case">
                                 {isUpdateLoading ? <span className="loading loading-spinner"></span>
                                     :

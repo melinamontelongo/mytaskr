@@ -13,11 +13,11 @@ import Modal from "../ui/Modal";
 import { dateFormatter } from "@/lib/dateFormatter";
 
 
-interface TaskModalProps {
+interface UpdateTaskModalProps {
     task: Task,
     listName: string | undefined,
 }
-const TaskModal = ({ task, listName }: TaskModalProps) => {
+const UpdateTaskModal = ({ task, listName }: UpdateTaskModalProps) => {
     const router = useRouter();
     const modal = useRef<HTMLInputElement>(null);
 
@@ -100,15 +100,17 @@ const TaskModal = ({ task, listName }: TaskModalProps) => {
                                     </label>
                                 </div>
 
+                                <div className="mb-2">
+                                    <button type="button" className="btn btn-sm btn-outline btn-error rounded normal-case" onClick={() => deleteTask()}>
+                                        {isDeleteLoading ? <span className="loading loading-spinner"></span>
+                                            :
+                                            "Delete task"
+                                        }
+                                    </button>
+                                </div>
                             </div>
                         </div>
                         <div className="modal-action">
-                            <button type="button" className="btn btn-outline btn-error rounded normal-case" onClick={() => deleteTask()}>
-                                {isDeleteLoading ? <span className="loading loading-spinner"></span>
-                                    :
-                                    "Delete"
-                                }
-                            </button>
                             <button type="submit" className="btn btn-primary rounded normal-case">
                                 {isUpdateLoading ? <span className="loading loading-spinner"></span>
                                     :
@@ -124,4 +126,4 @@ const TaskModal = ({ task, listName }: TaskModalProps) => {
     </>)
 }
 
-export default TaskModal;
+export default UpdateTaskModal;

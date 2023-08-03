@@ -43,7 +43,7 @@ const DeleteListModal = ({ listId, listName }: DeleteListModalProps) => {
                     <p>This list and its tasks will be deleted. This cannot be undone.</p>
                 </>}
                 actionContent={<>
-                    <button className="btn btn-primary rounded normal-case" onClick={() => deleteList()}>
+                    <button className="btn btn-outline btn-error rounded normal-case" onClick={() => deleteList()}>
                         {isLoading ? <span className="loading loading-spinner"></span>
                             :
                             "Delete"

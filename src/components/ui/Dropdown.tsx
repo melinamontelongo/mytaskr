@@ -23,7 +23,7 @@ const Dropdown = ({ items, label, additionalInfo, isLabelStyled, isPrimary, isAl
                 className={`${isLabelStyled ? `btn btn-sm ${isPrimary ? "btn-primary" : "btn-ghost"} m-1 normal-case rounded` : "list-none cursor-pointer"}`}>
                 {label}
             </summary>
-            <ul className={`p-2 shadow menu dropdown-content z-[1] bg-base-100 rounded-box ${additionalInfo ? "w-fit" : ""}`}>
+            <ul className={`p-2 shadow menu dropdown-content z-[1] backdrop-blur bg-base-200/50 rounded-box ${additionalInfo ? "w-fit" : ""}`}>
                 {additionalInfo && additionalInfo}
 
                 <div className="flex flex-col gap-2">

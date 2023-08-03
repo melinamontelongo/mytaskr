@@ -100,7 +100,8 @@ export type UnsplashPhotoType = {
     user: {
         id: string,
         username: string,
-    }
+    },
+    blur_hash: string,
 }
 
 /************ LIST ************/
