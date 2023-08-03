@@ -74,8 +74,8 @@ export type BoardCreationType = z.infer<typeof BoardCreation>
 
 //  Board creation form
 export const BoardCreationForm = z.object({
-    name: z.string().min(3).max(32),
-    description: z.string().max(150),
+    name: z.string().min(3, { message: "Must contain at least 3 characters" }).max(32, { message: "Must contain at most 32 characters" }),
+    description: z.string().max(150, { message: "Must contain at most 150 characters" }),
 })
 export type BoardCreationFormType = z.infer<typeof BoardCreationForm>
 
@@ -119,8 +119,8 @@ export type ListCreationType = z.infer<typeof ListCreation>
 
 //  List creation form
 export const ListCreationForm = z.object({
-    name: z.string().min(3).max(32),
-    description: z.string().max(150).optional(),
+    name: z.string().min(3, { message: "Must contain at least 3 characters" }).max(32, { message: "Must contain at most 32 characters" }),
+    description: z.string().max(150, { message: "Must contain at most 150 characters" }).optional(),
 })
 export type ListCreationFormType = z.infer<typeof ListCreationForm>
 
@@ -149,8 +149,8 @@ export const TaskCreation = z.object({
 export type TaskCreationType = z.infer<typeof TaskCreation>
 
 export const TaskCreationForm = z.object({
-    name: z.string().min(3).max(32),
-    description: z.string().max(150).optional(),
+    name: z.string().min(3, { message: "Must contain at least 3 characters" }).max(32, { message: "Must contain at most 32 characters" }),
+    description: z.string().max(150, { message: "Must contain at most 150 characters" }).optional(),
 })
 export type TaskCreationFormType = z.infer<typeof TaskCreationForm>
 
@@ -164,8 +164,8 @@ export type TaskOrderUpdateType = z.infer<typeof TaskOrderUpdate>
 
 //  Task update
 export const TaskUpdate = z.object({
-    name: z.string().min(3).max(32),
-    description: z.string().max(150).optional(),
+    name: z.string().min(3, { message: "Must contain at least 3 characters" }).max(32, { message: "Must contain at most 32 characters" }),
+    description: z.string().max(150, { message: "Must contain at most 150 characters" }).optional(),
     taskId: z.string(),
 })
 export type TaskUpdateType = z.infer<typeof TaskUpdate>
