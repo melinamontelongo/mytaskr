@@ -1,5 +1,5 @@
 import BoardDisplay from "@/components/board/BoardDisplay";
-import CreateListBtnModal from "@/components/list/CreateListBtnModal";
+import CreateListBtnModal from "@/components/list/CreateListModal";
 import { db } from "@/lib/db";
 import { notFound } from "next/navigation";
 

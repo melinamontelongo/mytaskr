@@ -11,11 +11,11 @@ export type UserCredentialsType = z.infer<typeof UserCredentials>
 export const UserProfileUpdate = z.object({
     username: z.string().min(3).max(16),
     name: z.string().min(3).max(32),
-/*     image: z.nullable(z.any()
-        .refine((file) => file?.size <= 5000000, "Max image size is 5 MB")
-        .refine((file) => ["image/jpeg", "image/jpg", "image/png"].includes(file?.type), "Only .jpg, .jpg and .png images are supported."))
-         */
-    })
+    /*     image: z.nullable(z.any()
+            .refine((file) => file?.size <= 5000000, "Max image size is 5 MB")
+            .refine((file) => ["image/jpeg", "image/jpg", "image/png"].includes(file?.type), "Only .jpg, .jpg and .png images are supported."))
+             */
+})
 export type UserProfileUpdateType = z.infer<typeof UserProfileUpdate>
 
 /************ WORKSPACE ************/
@@ -67,6 +67,8 @@ export const BoardCreation = z.object({
     name: z.string().min(3).max(32),
     description: z.string().max(150),
     workspaceId: z.string(),
+    backgroundImageFull: z.string().url().optional(),
+    backgroundImageSmall: z.string().url().optional(),
 })
 export type BoardCreationType = z.infer<typeof BoardCreation>
 
@@ -81,8 +83,29 @@ export const BoardUpdate = z.object({
     name: z.string().min(3).max(32),
     description: z.string().max(150),
     boardId: z.string(),
+    backgroundImageFull: z.string().url().optional(),
+    backgroundImageSmall: z.string().url().optional(),
 })
 export type BoardUpdateType = z.infer<typeof BoardUpdate>
+
+//  Unsplash photo
+export type UnsplashPhotoType = {
+    id: string,
+    alt_description: string,
+    createdAt: string,
+    description: string,
+    links: {
+        download_location: string,
+    },
+    urls: {
+        full: string,
+        small: string,
+    },
+    user: {
+        id: string,
+        username: string,
+    }
+}
 
 /************ LIST ************/
 

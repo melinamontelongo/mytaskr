@@ -9,14 +9,14 @@ export async function PUT(req:Request){
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
 
         const body = await req.json()
-        const { name, description, boardId } = BoardUpdate.parse(body);
+        const { name, description, boardId, backgroundImageFull, backgroundImageSmall } = BoardUpdate.parse(body);
 
         await db.board.update({
             where: {
                 id: boardId,
             },
             data: {
-                name, description
+                name, description, backgroundImageFull, backgroundImageSmall
             }
         });
         await db.activity.create({

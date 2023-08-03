@@ -91,7 +91,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
             </div>
             <div className="flex md:flex-row flex-col md:flex-wrap gap-4 my-4">
                 {workspace.boards.length > 0 ? workspace.boards.map((board) => {
-                    return <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} />
+                    return <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} backgroundImageSrc={board.backgroundImageSmall}/>
                 }) :
                     <p>No boards in this workspace.</p>
                 }

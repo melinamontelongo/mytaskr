@@ -10,11 +10,11 @@ export async function POST(req: Request) {
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
 
         const body = await req.json();
-        const { name, description, workspaceId } = BoardCreation.parse(body);
+        const { name, description, workspaceId, backgroundImageFull, backgroundImageSmall } = BoardCreation.parse(body);
 
         await db.board.create({
             data: {
-                name, description, workspaceID: workspaceId,
+                name, description, workspaceID: workspaceId, backgroundImageFull, backgroundImageSmall,
                 activity: {
                     create: {
                         userID: session.user.id,

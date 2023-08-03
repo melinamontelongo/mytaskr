@@ -88,6 +88,9 @@ model Board {
   description String?
   createdAt   DateTime   @default(now())
   updatedAt   DateTime   @updatedAt
+  //  Unsplash background image url
+  backgroundImageFull String?
+  backgroundImageSmall String?
   //  Workspace it belongs to
   workspace   Workspace  @relation(fields: [workspaceID], references: [id], onDelete: Cascade)
   workspaceID String     @db.ObjectId

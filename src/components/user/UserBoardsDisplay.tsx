@@ -16,7 +16,7 @@ const UserBoardsDisplay = ({ workspaces }: UserBoardsDisplayProps) => {
                 <React.Fragment key={`workspaces${w.id}`}>
                     {w.boards.length > 0 ? w.boards.map((board) => {
                         return (
-                            <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} />
+                            <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} backgroundImageSrc={board?.backgroundImageSmall}/>
                         )
                     })
                         :

@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { toast } from "react-hot-toast";
 import Link from "next/link";
+import BoardImageBtnModal from "./BoardImageBtnModal";
+import Image from "next/image";
 
 interface CreateBoardFormProps {
     workspaces?: Workspace[],
@@ -21,16 +23,17 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
         resolver: zodResolver(BoardCreation)
     });
     const [selectedWorkspaceID, setSelectedWorkspaceID] = useState<string>("");
-    
+    const [chosenImage, setChosenImage] = useState<any>();
+
     useEffect(() => {
-        if(!workspaces?.length && !createdWorkspaces?.length){
+        if (!workspaces?.length && !createdWorkspaces?.length) {
             toast.error(<div className="flex items-center gap-2">You have no workspaces. <Link className="btn btn-primary" href="/w/create">Create</Link></div>);
         };
     }, [workspaces, createdWorkspaces]);
 
     const { mutate: createBoard, isLoading } = useMutation({
-        mutationFn: async ({ name, description, workspaceId }: BoardCreationType) => {
-            const payload: BoardCreationType = { name, description, workspaceId };
+        mutationFn: async ({ name, description, workspaceId, backgroundImageFull, backgroundImageSmall }: BoardCreationType) => {
+            const payload: BoardCreationType = { name, description, workspaceId, backgroundImageFull, backgroundImageSmall };
             setSelectedWorkspaceID(workspaceId);
             const { data } = await axios.post("/api/b/create", payload);
             return data;
@@ -48,7 +51,12 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
 
     return (
         <div className="mx-auto">
-            <form onSubmit={handleSubmit((e) => createBoard(e))}>
+            <form onSubmit={handleSubmit((e) => createBoard({
+                ...e,
+                backgroundImageFull: chosenImage?.urls.full ?? undefined,
+                backgroundImageSmall: chosenImage?.urls.small ?? undefined
+            }))}
+            >
                 <div className="flex flex-col md:flex-row justify-center md:gap-20 md:items-center">
                     <div className="flex flex-col gap-5 w-full">
                         <div className="form-control mb-2">
@@ -93,6 +101,26 @@ const CreateBoardForm = ({ workspaces, createdWorkspaces }: CreateBoardFormProps
                             <label className="label">
                                 <span className="label-text-alt">This is where your board will belong to.</span>
                             </label>
+                        </div>
+                        <div className="mb-2">
+                            <BoardImageBtnModal selectImageAction={setChosenImage} />
+                            {chosenImage && <>
+                                <div className="flex flex-col justify-center my-2 w-full">
+                                    <div className="my-2 flex justify-center">
+                                        <Image src={chosenImage?.urls.small} alt={chosenImage?.alt_description} style={{ objectFit: "cover" }} width={200} height={200} />
+                                    </div>
+                                    <p className="text-sm text-center">Photo by { }
+                                        <a href={`https://unsplash.com/@${chosenImage?.user.username}?utm_source=mytaskr&utm_medium=referral`} target="_blank" className="font-bold underline">
+                                            {chosenImage?.user.username}
+                                        </a>
+                                        { } on { }
+                                        <a href="https://unsplash.com/?utm_source=mytaskr&utm_medium=referral" className="font-bold underline" target="_blank">
+                                            Unsplash
+                                        </a>
+                                    </p>
+                                </div>
+                            </>
+                            }
                         </div>
                     </div>
                 </div>
