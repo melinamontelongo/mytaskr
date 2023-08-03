@@ -4,17 +4,13 @@ import { z } from "zod";
 
 export const UserCredentials = z.object({
     email: z.string().email({ message: "Invalid email address." }),
-    password: z.string().min(6).max(18),
+    password: z.string().min(6, { message: "Must contain at least 6 characters" }).max(18, { message: "Must contain at most 18 characters" }),
 })
 export type UserCredentialsType = z.infer<typeof UserCredentials>
 
 export const UserProfileUpdate = z.object({
-    username: z.string().min(3).max(16),
-    name: z.string().min(3).max(32),
-    /*     image: z.nullable(z.any()
-            .refine((file) => file?.size <= 5000000, "Max image size is 5 MB")
-            .refine((file) => ["image/jpeg", "image/jpg", "image/png"].includes(file?.type), "Only .jpg, .jpg and .png images are supported."))
-             */
+    username: z.string().min(3, { message: "Must contain at least 3 characters" }).max(16, { message: "Must contain at most 16 characters" }),
+    name: z.string().min(3, { message: "Must contain at least 3 characters" }).max(32, { message: "Must contain at most 32 characters" }),
 })
 export type UserProfileUpdateType = z.infer<typeof UserProfileUpdate>
 
@@ -31,8 +27,8 @@ export type WorkspaceCreationType = z.infer<typeof WorkspaceCreation>
 
 //  Workspace creation form
 export const WorkspaceCreationForm = z.object({
-    name: z.string().min(3).max(32),
-    description: z.string().max(150),
+    name: z.string().min(3, { message: "Must contain at least 3 characters" }).max(32, { message: "Must contain at most 32 characters" }),
+    description: z.string().max(150, { message: "Must contain at most 150 characters" }),
     visibility: z.enum(["public", "private"]),
 })
 export type WorkspaceCreationFormType = z.infer<typeof WorkspaceCreationForm>
