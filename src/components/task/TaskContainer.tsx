@@ -4,7 +4,7 @@ import { Draggable } from "react-beautiful-dnd";
 import NaturalDragAnimation from 'natural-drag-animation-rbdnd';
 import { AiFillEdit } from "react-icons/ai";
 
-interface ListItemProps {
+interface TaskContainerProps {
     task: Task,
     index: number,
     isTaskLoading: boolean,
@@ -12,8 +12,7 @@ interface ListItemProps {
     isUserMember: boolean,
 }
 
-
-const ListItem = ({ task, index, isTaskLoading, setCurrentTask, isUserMember }: ListItemProps) => {
+const TaskContainer = ({ task, index, isTaskLoading, setCurrentTask, isUserMember }: TaskContainerProps) => {
     return (<>
         <Draggable draggableId={task.id} index={index} isDragDisabled={isTaskLoading || !isUserMember}>
             {(provided, snapshot) => (
@@ -30,9 +29,20 @@ const ListItem = ({ task, index, isTaskLoading, setCurrentTask, isUserMember }: 
                             style={style}>
                             <div className="flex justify-between items-center" >
                                 <p className="break-word">{task.name}</p>
-                                <label htmlFor={`taskModal`} className="btn btn-sm btn-ghost rounded invisible group-hover:visible" onClick={() => setCurrentTask(task)}>
-                                    <AiFillEdit />
-                                </label>
+                                {isUserMember ?
+                                    (
+                                        <label htmlFor={`taskModal`} className="btn btn-sm btn-ghost rounded invisible group-hover:visible" onClick={() => setCurrentTask(task)}>
+                                            <AiFillEdit />
+                                        </label>
+                                    )
+                                    :
+                                    (
+                                        <button className="btn btn-sm btn-ghost rounded invisible group-hover:visible" disabled>
+                                            <AiFillEdit />
+                                        </button>
+                                    )
+                                }
+
                             </div>
                         </div>
                     )}
@@ -43,4 +53,4 @@ const ListItem = ({ task, index, isTaskLoading, setCurrentTask, isUserMember }: 
     )
 }
 
-export default ListItem;
+export default TaskContainer;

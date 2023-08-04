@@ -5,11 +5,13 @@ import { IoMdAdd } from "react-icons/io";
 import BoardSettingsModal from "./BoardSettingsModal";
 import CreateListModal from "../list/CreateListModal";
 import VisibilityDisplay from "../ui/VisibilityDisplay";
+import { getAuthSession } from "@/lib/auth";
 
 interface BoardTopbarProps {
     boardId: string,
 }
 const BoardTopbar = async ({ boardId }: BoardTopbarProps) => {
+    const session = await getAuthSession();
     const board = await db.board.findFirst({
         where: {
             id: boardId,
@@ -25,12 +27,14 @@ const BoardTopbar = async ({ boardId }: BoardTopbarProps) => {
                 select: {
                     name: true,
                     isPublic: true,
+                    creatorId: true,
+                    usersIDs: true,
                 }
             }
         }
     });
     if (!board) return notFound();
-
+    if (!session?.user) return null;
     return (<>
         <div className="fixed top-14 left-0 h-fit right-0 backdrop-blur-sm bg-base-200/50">
             <div className="flex flex-row justify-evenly items-center h-full py-4 md:pl-48">
@@ -43,29 +47,51 @@ const BoardTopbar = async ({ boardId }: BoardTopbarProps) => {
                     </div>
                 </div>
                 <div className="flex flex-row justify-evenly items-center sm:gap-2 gap-1 flex-wrap">
-                    <div>
-                        <label htmlFor={"boardSettings"} className="btn btn-sm bg-base-200 normal-case w-full border-none flex items-center justify-center rounded">
-                            <AiOutlineSetting className="text-base-content text-xl" />
-                            <span className="hidden sm:block">Settings</span>
-                        </label>
-                    </div>
-                    <div>
-                        <label htmlFor={"createListModal"} className="btn btn-sm bg-base-200 normal-case w-full border-none flex items-center justify-center rounded">
-                            <IoMdAdd className="text-base-content text-xl" />
-                            <span className="hidden sm:block">Add list</span>
-                        </label>
-                    </div>
+                    {(session.user.id === board.workspace.creatorId || board.workspace.usersIDs.includes(session.user.id)) ? (
+                        <>
+                            <div>
+                                <label htmlFor={"boardSettings"} className="btn btn-sm bg-base-200 normal-case w-full border-none flex items-center justify-center rounded">
+                                    <AiOutlineSetting className="text-base-content text-xl" />
+                                    <span className="hidden sm:block">Settings</span>
+                                </label>
+                            </div>
+                            <div>
+                                <label htmlFor={"createListModal"} className="btn btn-sm bg-base-200 normal-case w-full border-none flex items-center justify-center rounded">
+                                    <IoMdAdd className="text-base-content text-xl" />
+                                    <span className="hidden sm:block">Add list</span>
+                                </label>
+                            </div>
+                        </>
+                    ) :
+                        (<>
+                            <div>
+                                <button className="btn btn-sm bg-base-200 normal-case w-full border-none flex items-center justify-center rounded group" disabled>
+                                    <AiOutlineSetting className="group-enabled:text-base-content text-xl" />
+                                    <span className="hidden sm:block">Settings</span>
+                                </button>
+                            </div>
+                            <div>
+                                <button className="btn btn-sm bg-base-200 normal-case w-full border-none flex items-center justify-center rounded group" disabled>
+                                    <IoMdAdd className="group-enabled:text-base-content text-xl" />
+                                    <span className="hidden sm:block">Add list</span>
+                                </button>
+                            </div>
+                        </>)
+                    }
                 </div>
             </div>
-        </div>
-
-        <BoardSettingsModal
-            boardId={board.id}
-            boardName={board.name}
-            boardDescription={board.description}
-            boardImages={{ backgroundImageFull: board.backgroundImageFull, backgroundImageSmall: board.backgroundImageSmall }}
-        />
-        <CreateListModal boardId={boardId} />
+        </div >
+        {(session.user.id === board.workspace.creatorId || board.workspace.usersIDs.includes(session.user.id)) && (
+            <>
+                <BoardSettingsModal
+                    boardId={board.id}
+                    boardName={board.name}
+                    boardDescription={board.description}
+                    boardImages={{ backgroundImageFull: board.backgroundImageFull, backgroundImageSmall: board.backgroundImageSmall }}
+                />
+                <CreateListModal boardId={boardId} />
+            </>
+        )}
 
     </>)
 }
