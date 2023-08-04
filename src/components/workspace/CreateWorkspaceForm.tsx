@@ -69,7 +69,7 @@ const CreateWorkspaceForm = () => {
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Name</label>
                             <input type="text" className={`input input-bordered rounded ${errors.name && "border-error"}`} {...register("name")} />
-                            {errors.name && <p className="text-error text-sm">Invalid workspace name</p>}
+                            {errors.name && <p className="text-error text-sm">{errors.name.message ?? "Invalid workspace name"}</p>}
                             <label className="label">
                                 <span className="label-text-alt">This can be the name of your project, team, organization or company.</span>
                             </label>
@@ -78,7 +78,7 @@ const CreateWorkspaceForm = () => {
                         <div className="form-control mb-2">
                             <label className="label font-bold text-lg">Description</label>
                             <textarea className={`textarea textarea-bordered rounded ${errors.description && "border-error"}`} {...register("description")} />
-                            {errors.description && <p className="text-error text-sm">Invalid description</p>}
+                            {errors.description && <p className="text-error text-sm">{errors.description.message ?? "Invalid description"}</p>}
                             <label className="label">
                                 <span className="label-text-alt">Describe the purpose of this workspace.</span>
                             </label>

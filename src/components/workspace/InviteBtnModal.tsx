@@ -8,13 +8,16 @@ interface InviteBtnModalProps {
     invitedUsersIDs: string[],
     inviteActionContent?: ReactNode,
     workspaceID?: string | null,
+    isMember?: boolean,
 }
 
-const InviteBtnModal = forwardRef(({ inviteUserFn, invitedUsersIDs, inviteActionContent, workspaceID }: InviteBtnModalProps, ref:ForwardedRef<HTMLInputElement>) => {
+const InviteBtnModal = forwardRef(({ inviteUserFn, invitedUsersIDs, inviteActionContent, workspaceID, isMember }: InviteBtnModalProps, ref: ForwardedRef<HTMLInputElement>) => {
     return (<>
-        <label htmlFor="addUsersModal" className="btn bg-base-300 normal-case w-full border-none flex items-center justify-center rounded">
-            <AiOutlineUsergroupAdd className="text-base-content text-xl" /> Invite
-        </label>
+        <button disabled={isMember !== undefined ? !isMember : false} className="btn bg-base-300 normal-case w-full border-none rounded">
+            <label htmlFor="addUsersModal" className="flex items-center justify-center w-full h-full cursor-pointer p-0 m-0">
+                <AiOutlineUsergroupAdd className={`${isMember ? "text-base-content" : ""} text-xl`} /> Invite
+            </label>
+        </button>
 
         <Modal
             ref={ref}

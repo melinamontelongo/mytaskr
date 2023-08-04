@@ -10,9 +10,10 @@ import { toast } from "react-hot-toast";
 
 interface InviteToWorkspaceProps {
     workspaceId: string,
+    isMember: boolean,
 }
 
-const InviteToWorkspace = ({ workspaceId }: InviteToWorkspaceProps) => {
+const InviteToWorkspace = ({ workspaceId, isMember }: InviteToWorkspaceProps) => {
     const router = useRouter();
     const inviteModal = useRef<HTMLInputElement>(null);
     const [invitedUsersIDs, setInvitedUsersIDs] = useState<string[]>([]);
@@ -56,7 +57,7 @@ const InviteToWorkspace = ({ workspaceId }: InviteToWorkspaceProps) => {
         }
         router.refresh();
     }
-    const inviteActionContent = <button className="btn btn-primary normal-case rounded" onClick={() => inviteUsers()}>
+    const inviteActionContent = <button className="btn btn-primary normal-case rounded" onClick={() => inviteUsers()} disabled={!isMember}>
         {isLoading ? <span className="loading loading-spinner"></span> : "Invite"}
     </button>
     return <>
@@ -66,6 +67,7 @@ const InviteToWorkspace = ({ workspaceId }: InviteToWorkspaceProps) => {
             invitedUsersIDs={invitedUsersIDs}
             inviteActionContent={inviteActionContent}
             workspaceID={workspaceId}
+            isMember={isMember}
         />
     </>
 }

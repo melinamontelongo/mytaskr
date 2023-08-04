@@ -1,5 +1,6 @@
 import Avatar from "@/components/ui/Avatar";
 import DisplayCard from "@/components/ui/DisplayCard";
+import PrivatePage from "@/components/ui/PrivatePage";
 import InviteToWorkspace from "@/components/workspace/InviteToWorkspace";
 import UninviteUserBtn from "@/components/workspace/UninviteUserBtn";
 import WorkspaceSettingsBtnModal from "@/components/workspace/WorkspaceSettingsBtnModal";
@@ -33,15 +34,16 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     username: true,
                     image: true,
                 }
-            }
+            },
         }
     });
 
     if (!workspace) return notFound();
-
+    if (!session?.user) return null;
+    //  Not displaying if workspace is private and user is not a member
+    if ((session.user.id !== workspace.createdBy.id && !workspace.usersIDs.includes(session.user.id)) && !workspace.isPublic) return <PrivatePage page={"workspace"} />
     return (
         <div className="h-screen max-w-2xl mx-auto flex flex-col gap-5 md:pt-30 pt-36 box-content">
-
             <div className="flex flex-col sm:flex-row items-center sm:justify-between justify-start gap-5">
                 <div>
                     <h1 className="font-extrabold text-xl">{workspace.name}</h1>
@@ -74,7 +76,9 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                         workspaceId={workspace.id}
                         workspaceName={workspace.name}
                         workspaceDescription={workspace.description}
-                        isPublic={workspace.isPublic} />
+                        isPublic={workspace.isPublic}
+                        isMember={session.user.id === workspace.createdBy.id || workspace.usersIDs.includes(session.user.id)}
+                    />
                 </div>
             </div>
 
@@ -86,12 +90,16 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
             <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-5">
                 <h3 className="font-extrabold text-xl">Boards</h3>
                 <div className="w-52 sm:w-32">
-                    <Link className="btn bg-base-300 normal-case w-full border-none flex items-center justify-center rounded" href="/b/create"><IoMdAdd className="text-base-content text-xl" />  Create</Link>
+                    <button
+                        className="btn bg-base-300 normal-case w-full border-none rounded"
+                        disabled={session.user.id !== workspace.createdBy.id && !workspace.usersIDs.includes(session.user.id)}>
+                        <Link className="flex items-center justify-center " href="/b/create"><IoMdAdd className="enabled:text-base-content text-xl" />  Create</Link>
+                    </button>
                 </div>
             </div>
             <div className="flex md:flex-row flex-col md:flex-wrap gap-4 my-4">
                 {workspace.boards.length > 0 ? workspace.boards.map((board) => {
-                    return <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} backgroundImageSrc={board.backgroundImageSmall}/>
+                    return <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} backgroundImageSrc={board.backgroundImageSmall} />
                 }) :
                     <p>No boards in this workspace.</p>
                 }
@@ -100,7 +108,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
             <div className="flex flex-col sm:flex-row items-center sm:justify-between gap-5">
                 <h3 className="font-extrabold text-xl">Members</h3>
                 <div className="w-52 sm:w-32">
-                    <InviteToWorkspace workspaceId={params.id} />
+                    <InviteToWorkspace workspaceId={params.id} isMember={session.user.id === workspace.createdBy.id || workspace.usersIDs.includes(session.user.id)} />
                 </div>
             </div>
             <div className="flex md:flex-row flex-col md:flex-wrap gap-10 my-4">
@@ -114,7 +122,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                     return (
                         <div key={user.id} className="flex items-center gap-2">
                             <Avatar userImg={user.image} userName={user.name || user.email!} />
-                            {user.email} {session?.user.id === workspace.creatorId && <UninviteUserBtn userId={user.id} workspaceId={workspace.id}/> }
+                            {user.email} {session?.user.id === workspace.creatorId && <UninviteUserBtn userId={user.id} workspaceId={workspace.id} />}
                         </div>
                     )
                 })
