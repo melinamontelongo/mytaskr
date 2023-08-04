@@ -10,6 +10,21 @@ export async function POST(req: Request) {
 
         const body = await req.json();
         const { name, description, boardId } = ListCreation.parse(body);
+        const board = await db.board.findUnique({
+            where: {
+                id: boardId,
+            },
+            select: {
+                workspace: {
+                    select: {
+                        creatorId: true,
+                        usersIDs: true,
+                    }
+                }
+            }
+        });
+        if(!board) return new Response("Board not found", { status: 404 });
+        if(!(session.user.id === board.workspace.creatorId) && !board.workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can create lists", { status: 403 });
         //  Check if it's first list to be created on this board
         const existentLists = await db.list.count({
             where: {

@@ -9,12 +9,13 @@ interface ListItemProps {
     index: number,
     isTaskLoading: boolean,
     setCurrentTask: Function,
+    isUserMember: boolean,
 }
 
 
-const ListItem = ({ task, index, isTaskLoading, setCurrentTask }: ListItemProps) => {
+const ListItem = ({ task, index, isTaskLoading, setCurrentTask, isUserMember }: ListItemProps) => {
     return (<>
-        <Draggable draggableId={task.id} index={index} isDragDisabled={isTaskLoading}>
+        <Draggable draggableId={task.id} index={index} isDragDisabled={isTaskLoading || !isUserMember}>
             {(provided, snapshot) => (
                 <NaturalDragAnimation
                     style={provided.draggableProps.style}

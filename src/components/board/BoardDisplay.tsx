@@ -24,10 +24,11 @@ interface ExtendedBoard extends Board {
 }
 
 interface BoardDisplayProps {
-    board: ExtendedBoard
+    board: ExtendedBoard,
+    isUserMember: boolean,
 }
 
-const BoardDisplay = ({ board }: BoardDisplayProps) => {
+const BoardDisplay = ({ board, isUserMember }: BoardDisplayProps) => {
     const router = useRouter();
     const [boardInfo, setBoardInfo] = useState<ExtendedBoard>();
     const [currentDeleteList, setCurrentDeleteList] = useState<List>();
@@ -84,7 +85,7 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
     });
 
     const onDragEndHandler = async (result: any) => {
-        if(!boardInfo) return;
+        if (!boardInfo) return;
         const { destination, source, draggableId, type } = result;
 
         if (!destination) return;
@@ -207,16 +208,17 @@ const BoardDisplay = ({ board }: BoardDisplayProps) => {
             setBoardInfo({ ...boardInfo, lists: listArr })
         }
     };
-    if(!boardInfo) return null;
+    if (!boardInfo) return null;
 
     return (<>
         <div className="">
             <DragDropContext onDragEnd={onDragEndHandler}>
-                <Droppable droppableId="listsDroppable" direction="horizontal" type="list">
+                <Droppable droppableId="listsDroppable" direction="horizontal" type="list" isDropDisabled={!isUserMember}>
                     {provided => (
                         <div className="flex flex-row gap-5 pb-2"{...provided.droppableProps} ref={provided.innerRef}>
                             {boardInfo.lists.map((list, index) => {
                                 return <ListContainer
+                                    isUserMember={isUserMember}
                                     key={list.id}
                                     list={list}
                                     index={index}

@@ -11,12 +11,20 @@ export async function PATCH(req: Request) {
         const body = await req.json();
         const { invitedUsers, workspaceId } = WorkspaceInvite.parse(body)
         //  Find workspace
-        const workspace = await db.workspace.findFirst({
+        const workspace = await db.workspace.findUnique({
             where: {
                 id: workspaceId,
+            },
+            select: {
+                id: true,
+                name: true,
+                creatorId: true,
+                usersIDs: true,
             }
         });
-        if(!workspace) return new Response("Workspace not found.",  { status: 404 });
+
+        if (!workspace) return new Response("Workspace not found", { status: 404 });
+        if (!(session.user.id === workspace.creatorId) && !workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can invite users", { status: 403 });
 
         const usersToInvite: string[] = [];
         //  If workspace already has users

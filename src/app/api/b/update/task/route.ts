@@ -11,6 +11,31 @@ export async function PUT(req: Request) {
         const body = await req.json();
         const { name, description, taskId } = TaskUpdate.parse(body);
 
+        const task = await db.task.findUnique({
+            where: {
+                id: taskId,
+            },
+            select: {
+                list: {
+                    select: {
+                        board: {
+                            select: {
+                                workspace: {
+                                    select: {
+                                        creatorId: true,
+                                        usersIDs: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!task) return new Response("Task not found", { status: 404 });
+        if (!(session.user.id === task.list.board.workspace.creatorId) && !task.list.board.workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can edit tasks", { status: 403 });
+
         await db.task.update({
             where: {
                 id: taskId,
@@ -38,6 +63,32 @@ export async function DELETE(req: Request) {
         const url = new URL(req.url);
         const taskId = url.searchParams.get("id");
         if (!taskId) return new Response("Invalid query", { status: 400 });
+        
+        const task = await db.task.findUnique({
+            where: {
+                id: taskId,
+            },
+            select: {
+                list: {
+                    select: {
+                        board: {
+                            select: {
+                                workspace: {
+                                    select: {
+                                        creatorId: true,
+                                        usersIDs: true,
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!task) return new Response("Task not found", { status: 404 });
+        if (!(session.user.id === task.list.board.workspace.creatorId) && !task.list.board.workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can delete tasks", { status: 403 });
+
         await db.task.delete({
             where: {
                 id: taskId,

@@ -31,7 +31,11 @@ const BoardPage = async ({ params }: BoardPageProps) => {
             },
             workspace: {
                 select: {
-                    createdBy: true,
+                    createdBy: {
+                        select: {
+                            id: true,
+                        }
+                    },
                     usersIDs: true,
                     isPublic: true,
                 }
@@ -39,14 +43,14 @@ const BoardPage = async ({ params }: BoardPageProps) => {
         },
     })
     if (!board) return notFound();
-    if(!session?.user) return null;
-    //  Not displaying if board if workspace is private and user is not a member
+    if (!session?.user) return null;
+    //  Not displaying board if workspace is private and user is not a member
     if ((session.user.id !== board.workspace.createdBy.id && !board.workspace.usersIDs.includes(session.user.id)) && !board.workspace.isPublic) return <PrivatePage page={"board"} />
     return (
         <div className="max-h-screen mx-auto flex flex-col gap-5 md:pt-24 pt-32 box-content">
             <div className="overflow-x-auto overflow-y-hidden max-h-screen h-[calc(100vh-11rem)]">
                 <div className="flex flex-col">
-                    <BoardDisplay board={board} />
+                    <BoardDisplay board={board} isUserMember={session.user.id === board.workspace.createdBy.id || board.workspace.usersIDs.includes(session.user.id)} />
                 </div>
             </div>
         </div>

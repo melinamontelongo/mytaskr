@@ -18,10 +18,12 @@ export async function PUT(req:Request){
             },
             select: {
                 usersIDs: true,
+                creatorId: true
             }
         });
 
         if(!workspace) return new Response("Workspace not found", {status: 404});
+        if(workspace.creatorId !== session.user.id) return new Response("Only the workspace creator can uninvite users", {status: 403});
 
         const newUserIds = workspace?.usersIDs.filter((id) => id !== uninvitedUser);
         await db.workspace.update({

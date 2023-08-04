@@ -25,9 +25,22 @@ export async function PATCH(req: Request) {
             },
             select: {
                 indexNumber: true,
+                board: {
+                    select: {
+                        workspace: {
+                            select:{
+                                creatorId: true,
+                                usersIDs: true,
+                            }
+                        }
+                    }
+                }
             }
         });
-
+        
+        if (!list) return new Response("List not found", { status: 404 });
+        if(!(session.user.id === list.board.workspace.creatorId) && !list.board.workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can arrange lists", { status: 403 });
+        
         //  Find prev list if exists
         if (prevListId) {
             prevList = await db.list.findFirst({
@@ -90,7 +103,28 @@ export async function DELETE(req: Request) {
 
         if (!listId) return new Response("Invalid query", { status: 400 });
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
-
+        
+        const list = await db.list.findUnique({
+            where: {
+                id: listId,
+            },
+            select: {
+                board: {
+                    select: {
+                        workspace: {
+                            select: {
+                                creatorId: true,
+                                usersIDs: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        
+        if (!list) return new Response("List not found", { status: 404 });
+        if(!(session.user.id === list.board.workspace.creatorId) && !list.board.workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can delete lists", { status: 403 });
+        
         await db.list.delete({
             where: {
                 id: listId,
@@ -110,7 +144,25 @@ export async function PUT(req: Request) {
         const session = await getAuthSession();
 
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
-
+        const list = await db.list.findUnique({
+            where: {
+                id: listId,
+            },
+            select: {
+                board: {
+                    select: {
+                        workspace: {
+                            select: {
+                                creatorId: true,
+                                usersIDs: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
+        if (!list) return new Response("List not found", { status: 404 });
+        if(!(session.user.id === list.board.workspace.creatorId) && !list.board.workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can edit lists", { status: 403 });
         await db.list.update({
             where: {
                 id: listId,

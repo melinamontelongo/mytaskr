@@ -10,6 +10,28 @@ export async function POST(req: Request) {
 
         const body = await req.json();
         const { name, description, listId } = TaskCreation.parse(body);
+
+        const list = await db.list.findUnique({
+            where: {
+                id: listId,
+            },
+            select: {
+                board: {
+                    select: {
+                        workspace: {
+                            select: {
+                                creatorId: true,
+                                usersIDs: true,
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+        if (!list) return new Response("Task not found", { status: 404 });
+        if (!(session.user.id === list.board.workspace.creatorId) && !list.board.workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can create tasks", { status: 403 });
+        
         //  Check if it's first task to be created on this list
         const existentTasks = await db.task.count({
             where: {
@@ -185,7 +207,7 @@ export async function PUT(req: Request) {
         } else if (!prevTask && nextTask) {
             newIndexNumber = nextTask.indexNumber / 2
             //  It's going to be first task on a list without tasks
-        } else if(!prevTask && !nextTask && task) {
+        } else if (!prevTask && !nextTask && task) {
             newIndexNumber = 1040;
         } else {
             throw new Error("Something went wrong.");

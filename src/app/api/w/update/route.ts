@@ -3,7 +3,7 @@ import { db } from "@/lib/db";
 import { WorkspaceUpdate } from "@/lib/validators";
 import { z } from "zod";
 
-export async function PUT(req: Request){
+export async function PUT(req: Request) {
     try {
         const session = await getAuthSession();
         if (!session?.user) return new Response("Unauthorized", { status: 401 });
@@ -11,6 +11,19 @@ export async function PUT(req: Request){
         const body = await req.json();
         const { name, description, visibility, workspaceId } = WorkspaceUpdate.parse(body);
         const isPublic = visibility === "public";
+
+        const workspace = await db.workspace.findUnique({
+            where: {
+                id: workspaceId,
+            },
+            select: {
+                creatorId: true,
+                usersIDs: true,
+            }
+        });
+
+        if (!workspace) return new Response("Workspace not found", { status: 404 });
+        if (!(session.user.id === workspace.creatorId) && !workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can update them", { status: 403 });
 
         await db.workspace.update({
             where: {
@@ -31,7 +44,7 @@ export async function PUT(req: Request){
         });
 
         return new Response("Workspace updated successfully!");
-        
+
     } catch (e) {
         if (e instanceof z.ZodError) {
             //  Wrong data was sent

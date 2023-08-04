@@ -1,7 +1,7 @@
 import { getAuthSession } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { BoardCreation } from "@/lib/validators";
-import {z} from "zod";
+import { z } from "zod";
 
 //  Create board
 export async function POST(req: Request) {
@@ -11,6 +11,19 @@ export async function POST(req: Request) {
 
         const body = await req.json();
         const { name, description, workspaceId, backgroundImageFull, backgroundImageSmall } = BoardCreation.parse(body);
+
+        const workspace = await db.workspace.findUnique({
+            where: {
+                id: workspaceId,
+            },
+            select: {
+                creatorId: true,
+                usersIDs: true,
+            }
+        });
+
+        if (!workspace) return new Response("Workspace not found", { status: 404 });
+        if (!(session.user.id === workspace.creatorId) && !workspace.usersIDs.includes(session.user.id)) return new Response("Only workspace members can create boards", { status: 403 });
 
         await db.board.create({
             data: {

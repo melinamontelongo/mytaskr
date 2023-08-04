@@ -18,9 +18,10 @@ interface ListContainerProps {
     setDeleteList: Function,
     setUpdateList: Function,
     setCurrentTask: Function,
+    isUserMember: boolean,
 }
 
-const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteList, setUpdateList, setCurrentTask }: ListContainerProps) => {
+const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteList, setUpdateList, setCurrentTask, isUserMember }: ListContainerProps) => {
 
     const showDeleteModal = () => {
         setDeleteList(list);
@@ -29,7 +30,7 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
         setUpdateList(list);
     }
     return (<>
-        <Draggable draggableId={list.id} index={index} isDragDisabled={isListLoading}>
+        <Draggable draggableId={list.id} index={index} isDragDisabled={isListLoading || !isUserMember}>
             {provided => (
                 <div
                     {...provided.draggableProps}
@@ -54,13 +55,13 @@ const ListContainer = ({ list, index, isListLoading, isTaskLoading, setDeleteLis
                     <div className="overflow-y-auto w-64 min-h-[3rem] max-h-[calc(100vh-20rem)]">
                         <div className="px-2 min-h-[3rem] max-h-[calc(100vh-20rem)]">
                             <div className="min-h-[3rem] max-h-[calc(100vh-20rem)]">
-                                <Droppable droppableId={list.id} type="task">
+                                <Droppable droppableId={list.id} type="task" isDropDisabled={!isUserMember}>
                                     {provided => (
                                         <div className="min-h-[3rem] max-h-[calc(100vh-20rem)]"
                                             ref={provided.innerRef}
                                             {...provided.droppableProps}>
                                             {list.tasks.map((task, index) => {
-                                                return <TaskContainer key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} setCurrentTask={setCurrentTask} />
+                                                return <TaskContainer key={task.id} task={task} index={index} isTaskLoading={isTaskLoading} setCurrentTask={setCurrentTask} isUserMember={isUserMember} />
                                             })}
                                             {provided.placeholder}
                                         </div>
