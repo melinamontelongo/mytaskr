@@ -22,7 +22,7 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
     const [chosenImage, setChosenImage] = useState<UnsplashPhotoType>();
 
     const boardModal = useRef<HTMLInputElement>(null);
-    const { handleSubmit, register, formState: { errors } } = useForm<BoardCreationFormType>({
+    const { handleSubmit, register, formState: { errors }, reset } = useForm<BoardCreationFormType>({
         resolver: zodResolver(BoardCreationForm),
         defaultValues: {
             name: boardName,
@@ -36,7 +36,15 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
             return data;
         },
         onError: (err) => {
-            return toast.error("Could not update board.");
+            if (err instanceof AxiosError) {
+                if (err?.response?.status === 403) {
+                    toast.error("Only workspace members can edit its boards.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not delete board.");
+            }
         },
         onSuccess: () => {
             toast.success("Board updated successfully!");
@@ -55,16 +63,21 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
         },
         onError: (err) => {
             if (err instanceof AxiosError) {
-                if (err?.response?.status === 403) return toast.error("Only the author of the workspace can delete its boards.");
-                if (err?.response?.status === 401) return toast.error("You must be logged in.");
+                if (err?.response?.status === 403) {
+                    toast.error("Only the author of the workspace can delete its boards.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not delete board.");
             }
-            toast.error("Could not delete board.");
         },
         onSuccess: () => {
             toast.success("Board deleted successfully!");
             router.push("/");
         },
         onSettled: () => {
+            reset();
             if (boardModal?.current) boardModal.current.click();
         }
     });
@@ -77,11 +90,11 @@ const BoardSettingsModal = ({ boardId, boardName, boardDescription, boardImages 
         }
     });
 
-    const chooseImageAction = (image:UnsplashPhotoType) => {
+    const chooseImageAction = (image: UnsplashPhotoType) => {
         setChosenImage(image);
         triggerImageDownload();
     };
-    
+
     return (
         <Modal
             ref={boardModal}

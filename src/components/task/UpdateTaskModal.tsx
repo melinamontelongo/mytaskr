@@ -4,7 +4,7 @@ import { TaskCreationForm, TaskCreationFormType, TaskUpdateType } from "@/lib/va
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Task } from "@prisma/client";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef } from "react";
 import { useForm } from "react-hook-form";
@@ -40,7 +40,15 @@ const UpdateTaskModal = ({ task, listName }: UpdateTaskModalProps) => {
             return data;
         },
         onError: (err) => {
-            toast.error("Could not edit task.")
+            if (err instanceof AxiosError) {
+                if (err?.response?.status === 403) {
+                    toast.error("Only workspace members can edit tasks.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not edit list.");
+            }
         },
         onSuccess: () => {
             toast.success("Task edited successfully!")
@@ -57,7 +65,15 @@ const UpdateTaskModal = ({ task, listName }: UpdateTaskModalProps) => {
             return data;
         },
         onError: (err) => {
-            toast.error("Could not delete list.")
+            if (err instanceof AxiosError) {
+                if (err?.response?.status === 403) {
+                    toast.error("Only workspace members can delete tasks.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not delete task.");
+            }
         },
         onSuccess: () => {
             toast.success("Task deleted successfully!")

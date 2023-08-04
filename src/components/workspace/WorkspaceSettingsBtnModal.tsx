@@ -37,7 +37,15 @@ const WorkspaceSettingsBtnModal = ({ workspaceId, workspaceName, workspaceDescri
             return data;
         },
         onError: (err) => {
-            return toast.error("Could not update workspace.");
+            if (err instanceof AxiosError) {
+                if (err?.response?.status === 403) {
+                    toast.error("Only workspace members can edit it.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not edit workspace.");
+            }
         },
         onSuccess: () => {
             toast.success("Workspace updated successfully!");

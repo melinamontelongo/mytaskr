@@ -108,8 +108,8 @@ export type UnsplashPhotoType = {
 
 //  List creation
 export const ListCreation = z.object({
-    name: z.string().min(3).max(32),
-    description: z.string().max(150).optional(),
+    name: z.string().min(3, { message: "Must contain at least 3 characters" }).max(32, { message: "Must contain at most 32 characters" }),
+    description: z.string().max(150, { message: "Must contain at most 150 characters" }).optional(),
     boardId: z.string(),
 });
 export type ListCreationType = z.infer<typeof ListCreation>

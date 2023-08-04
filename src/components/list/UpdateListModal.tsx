@@ -2,7 +2,7 @@
 import { ListCreationForm, ListCreationFormType, ListCreationType, ListUpdateType } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -38,7 +38,15 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
             return data;
         },
         onError: (err) => {
-            toast.error("Could not edit list.")
+            if (err instanceof AxiosError) {
+                if (err?.response?.status === 403) {
+                    toast.error("Only workspace members can edit lists.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not delete list.");
+            }
         },
         onSuccess: () => {
             toast.success("List edited successfully!")

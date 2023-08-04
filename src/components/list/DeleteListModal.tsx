@@ -1,6 +1,6 @@
 "use client"
 import { useMutation } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useRef } from "react";
 import { toast } from "react-hot-toast";
@@ -22,7 +22,15 @@ const DeleteListModal = ({ listId, listName }: DeleteListModalProps) => {
             return data;
         },
         onError: (err) => {
-            toast.error("Could not delete list.");
+            if (err instanceof AxiosError) {
+                if (err?.response?.status === 403) {
+                    toast.error("Only workspace members can delete lists.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not delete list.");
+            }
         },
         onSuccess: () => {
             toast.success("List deleted successfully!");

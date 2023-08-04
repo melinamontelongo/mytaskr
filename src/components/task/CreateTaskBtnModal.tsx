@@ -1,5 +1,5 @@
 "use client"
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import { TaskCreationForm, TaskCreationFormType, TaskCreationType } from "@/lib/validators";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useMutation } from "@tanstack/react-query";
@@ -24,15 +24,25 @@ const CreateTaskBtnModal = ({ listId }: CreateTaskBtnModal) => {
             return data;
         },
         onError: (err) => {
-            return toast.error("Could not create task.");
+            if (err instanceof AxiosError) {
+                if (err?.response?.status === 403) {
+                    toast.error("Only workspace members can create tasks.");
+                } else if (err?.response?.status === 401) {
+                    toast.error("You must be logged in.");
+                }
+            } else {
+                toast.error("Could not create task.");
+            }
         },
         onSuccess: () => {
             toast.success("Task created successfully!");
+            router.refresh();
+        },
+        onSettled: () => {
             reset();
             //  Close modal
             const checkModal = document.getElementById(listId);
             checkModal?.click()
-            router.refresh();
         }
     });
     return (
