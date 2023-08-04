@@ -3,10 +3,9 @@ import { List, Task } from "@prisma/client";
 import TaskContainer from "../task/TaskContainer";
 import { Draggable, Droppable } from "react-beautiful-dnd";
 import CreateTaskBtnModal from "../task/CreateTaskBtnModal";
-import { BsThreeDots, BsThreeDotsVertical } from "react-icons/bs";
+import { BsThreeDots } from "react-icons/bs";
 import { AiFillDelete, AiFillEdit } from "react-icons/ai";
 import Dropdown from "../ui/Dropdown";
-import { useEffect } from "react";
 import { IoMdAdd } from "react-icons/io";
 
 interface ExtendedList extends List {
