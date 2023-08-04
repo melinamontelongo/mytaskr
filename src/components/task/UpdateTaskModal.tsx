@@ -31,7 +31,7 @@ const UpdateTaskModal = ({ task, listName }: UpdateTaskModalProps) => {
 
     useEffect(() => {
         reset({ name: task.name, description: task.description ?? "" });
-    }, [task.id, task.name, task.description]);
+    }, [task.id, task.name, task.description, reset]);
 
     const { mutate: updateTask, isLoading: isUpdateLoading } = useMutation({
         mutationFn: async ({ name, description, taskId }: TaskUpdateType) => {

@@ -29,7 +29,7 @@ const UpdateListModal = ({ listId, listName, listDescription }: UpdateListModalP
 
     useEffect(() => {
         reset({name: listName, description: listDescription ?? ""});
-    }, [listId, listName, listDescription]);
+    }, [listId, listName, listDescription, reset]);
 
     const { mutate: updateList, isLoading } = useMutation({
         mutationFn: async ({ name, description, listId }: ListUpdateType) => {
