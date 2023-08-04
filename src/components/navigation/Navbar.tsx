@@ -28,7 +28,7 @@ const Navbar = async () => {
                 <ThemeToggler />
                 {session ? <UserDropdown user={session.user} /> :
 
-                    <Link href="/sign-in" className="btn btn-primary">Sign in</Link>
+                    <Link href="/sign-in" className="btn btn-primary rounded btn-sm normal-case">Sign in</Link>
                 }
             </div>
 
@@ -53,7 +53,7 @@ const Navbar = async () => {
             <div className="md:hidden flex-none">
                 {session ? <UserDropdown user={session.user} />
                     :
-                    <Link href="/sign-in" className="btn btn-primary">Sign in</Link>
+                    <Link href="/sign-in" className="btn btn-primary rounded btn-sm normal-case">Sign in</Link>
                 }
             </div>
         </div>
