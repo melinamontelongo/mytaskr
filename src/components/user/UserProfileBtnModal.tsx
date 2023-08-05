@@ -89,7 +89,7 @@ const UserProfileBtnModal = ({ user }: UserProfileBtnModalProps) => {
                                     "Save"
                                 }
                             </button>
-                            <label htmlFor={`updateUserProfile`} className="btn rounded normal-case">Cancel</label>
+                            <label htmlFor={`updateUserProfile`} className="btn bg-base-300 rounded normal-case">Cancel</label>
                         </div>
                     </form>
                 </>}
