@@ -10,24 +10,13 @@ interface UserBoardsDisplayProps {
     workspaces: ExtendedWorkspace[]
 }
 const UserBoardsDisplay = ({ workspaces }: UserBoardsDisplayProps) => {
+    const boards = workspaces.flatMap((w) => w.boards);
     return (<>
-        {workspaces.length > 0 ? workspaces.map((w) => {
-            return (
-                <React.Fragment key={`workspaces${w.id}`}>
-                    {w.boards.length > 0 ? w.boards.map((board) => {
-                        return (
-                            <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} backgroundImageSrc={board?.backgroundImageSmall}/>
-                        )
-                    })
-                        :
-                        <p>You have no boards. <Link href="b/create" className="font-bold text-primary hover:text-base-content">Create one.</Link></p>
-                    }
-                </React.Fragment>
-            )
+        {boards.length > 0 ? boards.map((board) => {
+            return <DisplayCard key={board.id} linkHref={`/b/${board.id}`} title={board.name} text={board.description} backgroundImageSrc={board?.backgroundImageSmall} />
         })
-        :
-        <p>You have no boards. <Link href="b/create" className="font-bold text-primary hover:text-base-content">Create one.</Link></p>
-    }
+            :
+            <p>You have no boards. <Link href="b/create" className="font-bold text-primary hover:text-base-content">Create one.</Link></p>}
     </>)
 }
 
