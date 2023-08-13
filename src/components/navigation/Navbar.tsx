@@ -45,12 +45,13 @@ const Navbar = async () => {
                             <Link key={`navbarHomeLink`} className="font-bold" href="/"><AiOutlineHome /> Home</Link>,
                             <Link key={`navbarCreateWLink`} className="font-bold" href="/w/create"><BsPersonWorkspace />Create workspace</Link>,
                             <Link key={`navbarCreateBLink`} className="font-bold" href="/b/create"><RiTableFill />Create board</Link>,
-                            <ThemeToggler key={`navbarThemeToggler`} />
+                            <ThemeToggler hasText={true} key={`navbarThemeToggler`} />
                         ]}
                     />
                 )}
             </div>
             <div className="md:hidden flex-none">
+                <ThemeToggler />
                 {session ? <UserDropdown user={session.user} />
                     :
                     <Link href="/sign-in" className="btn btn-primary rounded btn-sm normal-case">Sign in</Link>
