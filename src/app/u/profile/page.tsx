@@ -8,7 +8,7 @@ const ProfilePage = async () => {
     
     return (
         <>
-            <div className="h-full max-w-2xl mx-auto flex flex-col gap-5 md:pt-30 pt-36 box-content">
+            <div className="min-h-screen max-w-2xl mx-auto flex flex-col gap-5 p-24 px-5 box-content">
                 <UserProfile />
             </div>
         </>

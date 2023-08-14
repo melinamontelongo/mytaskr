@@ -51,10 +51,12 @@ const Navbar = async () => {
                 )}
             </div>
             <div className="md:hidden flex-none">
-                <ThemeToggler />
                 {session ? <UserDropdown user={session.user} />
                     :
-                    <Link href="/sign-in" className="btn btn-primary rounded btn-sm normal-case">Sign in</Link>
+                    <>
+                        <ThemeToggler />
+                        <Link href="/sign-in" className="btn btn-primary rounded btn-sm normal-case">Sign in</Link>
+                    </>
                 }
             </div>
         </div>

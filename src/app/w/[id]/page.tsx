@@ -43,7 +43,7 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
     //  Not displaying if workspace is private and user is not a member
     if ((session.user.id !== workspace.createdBy.id && !workspace.usersIDs.includes(session.user.id)) && !workspace.isPublic) return <PrivatePage page={"workspace"} />
     return (
-        <div className="h-screen max-w-2xl mx-auto flex flex-col gap-5 md:pt-30 pt-36 box-content">
+        <div className="min-h-screen h-full max-w-2xl mx-auto flex flex-col gap-5 pt-24 px-5 box-content">
             <div className="flex flex-col sm:flex-row items-center sm:justify-between justify-start gap-5">
                 <div>
                     <h1 className="font-extrabold text-xl">{workspace.name}</h1>
