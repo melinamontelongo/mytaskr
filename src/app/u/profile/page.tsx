@@ -1,3 +1,4 @@
+import Footer from "@/components/ui/Footer";
 import UserProfile from "@/components/user/UserProfile";
 import { getAuthSession } from "@/lib/auth";
 
@@ -8,9 +9,10 @@ const ProfilePage = async () => {
     
     return (
         <>
-            <div className="min-h-screen max-w-2xl mx-auto flex flex-col gap-5 p-24 px-5 box-content">
+            <div className="min-h-screen max-w-2xl mx-auto flex flex-col gap-5 pt-24 pb-10 px-5 box-content">
                 <UserProfile />
             </div>
+            <Footer />
         </>
     )
 

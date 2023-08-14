@@ -1,4 +1,5 @@
 import SignUp from "@/components/auth/SignUp";
+import Footer from "@/components/ui/Footer";
 import { getAuthSession } from "@/lib/auth";
 import { redirect } from "next/navigation";
 
@@ -10,6 +11,7 @@ const SignUpPage = async () => {
         <div className="h-screen max-w-2xl mx-auto flex flex-col items-center justify-center gap-5">
             <SignUp />
         </div>
+        <Footer />
     </>
     )
 }

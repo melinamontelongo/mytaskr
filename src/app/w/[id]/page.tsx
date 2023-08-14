@@ -1,5 +1,6 @@
 import Avatar from "@/components/ui/Avatar";
 import DisplayCard from "@/components/ui/DisplayCard";
+import Footer from "@/components/ui/Footer";
 import PrivatePage from "@/components/ui/PrivatePage";
 import InviteToWorkspace from "@/components/workspace/InviteToWorkspace";
 import UninviteUserBtn from "@/components/workspace/UninviteUserBtn";
@@ -42,8 +43,8 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
     if (!session?.user) return null;
     //  Not displaying if workspace is private and user is not a member
     if ((session.user.id !== workspace.createdBy.id && !workspace.usersIDs.includes(session.user.id)) && !workspace.isPublic) return <PrivatePage page={"workspace"} />
-    return (
-        <div className="min-h-screen h-full max-w-2xl mx-auto flex flex-col gap-5 pt-24 px-5 box-content">
+    return (<>
+        <div className="min-h-screen h-full max-w-2xl mx-auto flex flex-col gap-5 pt-24 pb-10 px-5 box-content">
             <div className="flex flex-col sm:flex-row items-center sm:justify-between justify-start gap-5">
                 <div>
                     <h1 className="font-extrabold text-xl">{workspace.name}</h1>
@@ -133,6 +134,8 @@ const WorkspacePage = async ({ params }: WorkspacePageProps) => {
                 }
             </div>
         </div>
+        <Footer />
+    </>
     )
 }
 
